@@ -1,10 +1,8 @@
-En este commit hicimos el login y el registro, completos de punta a punta.
-Backend: el registro valida los datos, guarda la contraseña encriptada con bcrypt y devuelve un token (JWT) que dura 7 dias. El login revisa el email y la contraseña y tambien devuelve el token. La ruta /api/auth/me devuelve los datos del usuario logueado y esta protegida por un middleware que revisa el token.
-Frontend: armamos el proyecto con Vite y React, con las pantallas de Login, Registro y un Home provisorio que saluda al usuario y tiene el boton de cerrar sesion. La sesion se guarda en el navegador y si el token vence te manda de vuelta al login.
-Tambien agregamos /api/health para chequear que el servidor ande.
-Para probarlo hay que copiar los .env.example como .env en backend y frontend y completar los datos.
+En este commit hicimos el login y el registro de usuarios.
+En el backend armamos las rutas para registrarse, iniciar sesion y ver el usuario logueado, con la contraseña encriptada y un token que dura 7 dias.
+En el frontend armamos las pantallas de login y registro, y un inicio provisorio que saluda al usuario y deja cerrar sesion.
 
-En el commit anterior (f618786) creamos la estructura del proyecto.
+En el commit anterior (36b281c) creamos la estructura del proyecto.
 Armamos las carpetas y los archivos del backend, del frontend y de la documentacion, pero todos los archivos estan vacios por ahora.
 Todavia no hay nada programado, solo esta la organizacion de las carpetas para empezar a trabajar.
 
