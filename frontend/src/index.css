@@ -2,6 +2,8 @@
   --color-fondo: #1c1410;
   --color-superficie: #2a1e18;
   --color-input: #3a2b23;
+  --color-tarjeta: #36271f;
+  --color-tarjeta-destacada: #4a3428;
   --color-borde: #4a382e;
   --color-acento: #cf7f3a;
   --color-acento-hover: #e0904a;
@@ -12,7 +14,12 @@
   --color-disco-naranja: #d08844;
   --color-disco-verde: #3e5a4b;
   --color-disco-violeta: #6b4f72;
+  --color-disco-terracota: #8a4b32;
+  --color-disco-azul: #2f4a52;
   --color-disco-crema: #ecdcc0;
+  --color-disco-arena: #e9b37a;
+  --color-disco-lila: #c79bc4;
+  --color-disco-celeste: #9fb5b8;
   --fuente: "Inter", system-ui, sans-serif;
   --radio: 6px;
 }
@@ -73,4 +80,17 @@ button {
 button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.app-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  background: var(--color-superficie);
+}
+
+@media (max-width: 767px) {
+  .app-layout {
+    grid-template-columns: 1fr;
+  }
 }

@@ -1,43 +1,76 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext.jsx";
 import { getLibrary } from "../services/library.js";
 import { getActivity } from "../services/activity.js";
+import { getStats } from "../services/stats.js";
+import { getCollections } from "../services/collections.js";
+import { searchMusic } from "../services/music.js";
 import Loader from "../components/Loader.jsx";
 import ErrorMessage from "../components/ErrorMessage.jsx";
 import EmptyState from "../components/EmptyState.jsx";
 import SongCard from "../components/SongCard.jsx";
+import Disco, { COLORES_DISCO } from "../components/Disco.jsx";
 import "./Home.css";
 
-const CANCIONES_RECIENTES = 6;
+const CANCIONES_RECIENTES = 5;
+const CANCIONES_DESTACADAS = 5;
+const PLAYLISTS_VISIBLES = 3;
+const ACTIVIDAD_VISIBLE = 4;
+const MS_POR_MINUTO = 60000;
+const MINUTOS_POR_HORA = 60;
+const HORAS_POR_DIA = 24;
 
-const TEXTOS_ACTIVIDAD = {
-  agregar_cancion: "Agregaste a tu biblioteca",
-  quitar_cancion: "Quitaste de tu biblioteca",
-  cambiar_estado: "Cambiaste el estado de",
-  favorito: "Actualizaste tus favoritas",
-  puntuar: "Puntuaste",
-  crear_playlist: "Creaste la playlist",
-  borrar_playlist: "Borraste la playlist",
-  agregar_a_playlist: "Agregaste a una playlist",
-  quitar_de_playlist: "Quitaste de una playlist",
-  crear_resena: "Escribiste una reseña de",
-  editar_resena: "Editaste la reseña de",
-};
+function tiempoRelativo(fecha) {
+  const minutos = Math.floor((Date.now() - new Date(fecha)) / MS_POR_MINUTO);
+  const horas = Math.floor(minutos / MINUTOS_POR_HORA);
+  const dias = Math.floor(horas / HORAS_POR_DIA);
+
+  if (minutos < 1) {
+    return "Recién";
+  }
+
+  if (minutos < MINUTOS_POR_HORA) {
+    return `Hace ${minutos} min`;
+  }
+
+  if (horas < HORAS_POR_DIA) {
+    return horas === 1 ? "Hace 1 hora" : `Hace ${horas} horas`;
+  }
+
+  if (dias === 1) {
+    return "Ayer";
+  }
+
+  return `Hace ${dias} días`;
+}
 
 export default function Home() {
-  const { usuario, logout } = useAuth();
-  const [canciones, setCanciones] = useState([]);
-  const [actividad, setActividad] = useState([]);
+  const [datos, setDatos] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     async function cargarDatos() {
       try {
-        const [biblioteca, ultimaActividad] = await Promise.all([getLibrary(), getActivity()]);
-        setCanciones(biblioteca.slice(0, CANCIONES_RECIENTES));
-        setActividad(ultimaActividad);
+        const [biblioteca, actividad, stats, playlists] = await Promise.all([
+          getLibrary(),
+          getActivity(),
+          getStats(),
+          getCollections(),
+        ]);
+
+        let destacadas = [];
+        if (stats.generos.length > 0) {
+          destacadas = await searchMusic(stats.generos[0].genero);
+        }
+
+        setDatos({
+          recientes: biblioteca.slice(0, CANCIONES_RECIENTES),
+          destacadas: destacadas.slice(0, CANCIONES_DESTACADAS),
+          playlists: playlists.slice(0, PLAYLISTS_VISIBLES),
+          actividad: actividad.slice(0, ACTIVIDAD_VISIBLE),
+          stats,
+        });
       } catch (err) {
         setError(err.response?.data?.error || "No se pudo conectar con el servidor");
       } finally {
@@ -51,29 +84,54 @@ export default function Home() {
     <main className="home">
       <header className="home-encabezado">
         <div>
-          <h1 className="home-titulo">Hola, {usuario.username}</h1>
-          <p className="home-subtitulo">Esto es lo último de tu colección.</p>
+          <h1 className="home-titulo">Bienvenido a SoundShelf</h1>
+          <p className="home-texto-secundario">Tu música, organizada a tu manera.</p>
         </div>
-        <button className="home-salir" onClick={logout}>
-          Cerrar sesión
-        </button>
+        <Link to="/explore" className="home-boton">
+          Explorar música
+        </Link>
       </header>
+
+      <section className="home-portada">
+        <p className="home-portada-etiqueta">Tu estantería musical</p>
+        <h2 className="home-portada-titulo">Cada canción tiene su lugar.</h2>
+        <p className="home-texto-secundario">Escuchá, guardá, organizá y descubrí tus favoritas.</p>
+      </section>
 
       {cargando && <Loader />}
 
       {error && <ErrorMessage mensaje={error} />}
 
-      {!cargando && !error && (
+      {datos && (
         <>
+          <section className="home-stats">
+            <div className="home-stat">
+              <span className="home-stat-numero">{datos.stats.total_guardadas}</span>
+              <span className="home-stat-texto">Canciones guardadas</span>
+            </div>
+            <div className="home-stat">
+              <span className="home-stat-numero">{datos.stats.favoritas}</span>
+              <span className="home-stat-texto">Favoritos</span>
+            </div>
+            <div className="home-stat">
+              <span className="home-stat-numero">{datos.stats.playlists}</span>
+              <span className="home-stat-texto">Playlists</span>
+            </div>
+            <div className="home-stat">
+              <span className="home-stat-numero">{datos.stats.promedio_puntuacion ?? "-"}</span>
+              <span className="home-stat-texto">Promedio</span>
+            </div>
+          </section>
+
           <section className="home-seccion">
             <h2 className="home-seccion-titulo">Agregadas recientemente</h2>
-            {canciones.length === 0 ? (
+            {datos.recientes.length === 0 ? (
               <EmptyState mensaje="Todavía no guardaste canciones.">
                 <Link to="/explore">Explorá música para empezar</Link>
               </EmptyState>
             ) : (
               <div className="home-canciones">
-                {canciones.map((cancion) => (
+                {datos.recientes.map((cancion) => (
                   <SongCard key={cancion.id} cancion={cancion} />
                 ))}
               </div>
@@ -81,24 +139,76 @@ export default function Home() {
           </section>
 
           <section className="home-seccion">
-            <h2 className="home-seccion-titulo">Actividad reciente</h2>
-            {actividad.length === 0 ? (
-              <EmptyState mensaje="Acá vas a ver lo que vayas haciendo en SoundShelf." />
+            <div className="home-seccion-encabezado">
+              <div>
+                <h2 className="home-seccion-titulo">Destacados para vos</h2>
+                <p className="home-texto-chico">Canciones de la API según tus géneros favoritos.</p>
+              </div>
+              <Link to="/explore" className="home-link">
+                Ver más en Explorar →
+              </Link>
+            </div>
+            {datos.destacadas.length === 0 ? (
+              <EmptyState mensaje="Guardá canciones para recibir recomendaciones según tus géneros." />
             ) : (
-              <ul className="home-actividad">
-                {actividad.map((item) => (
-                  <li key={item.id} className="home-actividad-item">
-                    <span>
-                      {TEXTOS_ACTIVIDAD[item.tipo]} <strong>{item.referencia}</strong>
-                    </span>
-                    <time className="home-actividad-fecha" dateTime={item.created_at}>
-                      {new Date(item.created_at).toLocaleDateString("es-AR")}
-                    </time>
-                  </li>
+              <div className="home-canciones">
+                {datos.destacadas.map((cancion) => (
+                  <SongCard key={cancion.track_id} cancion={cancion} mostrarGenero />
                 ))}
-              </ul>
+              </div>
             )}
           </section>
+
+          <div className="home-columnas">
+            <section className="home-seccion">
+              <div className="home-seccion-encabezado">
+                <h2 className="home-seccion-titulo">Mis playlists</h2>
+                <Link to="/playlists" className="home-link">
+                  Ver todas →
+                </Link>
+              </div>
+              {datos.playlists.length === 0 ? (
+                <EmptyState mensaje="Todavía no creaste playlists." />
+              ) : (
+                <ul className="home-lista home-playlists">
+                  {datos.playlists.map((playlist, indice) => (
+                    <li key={playlist.id}>
+                      <Link to={`/playlists/${playlist.id}`} className="home-playlist">
+                        <span className="home-playlist-disco">
+                          <Disco color={COLORES_DISCO[indice % COLORES_DISCO.length]} />
+                        </span>
+                        <span className="home-playlist-datos">
+                          <strong>{playlist.nombre}</strong>
+                          <span className="home-texto-chico">
+                            {playlist.cantidad === 1 ? "1 canción" : `${playlist.cantidad} canciones`}
+                          </span>
+                        </span>
+                        <span className="home-playlist-flecha">›</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+
+            <section className="home-seccion">
+              <h2 className="home-seccion-titulo">Actividad reciente</h2>
+              {datos.actividad.length === 0 ? (
+                <EmptyState mensaje="Acá vas a ver lo que vayas haciendo en SoundShelf." />
+              ) : (
+                <ul className="home-lista">
+                  {datos.actividad.map((item) => (
+                    <li key={item.id} className="home-actividad-item">
+                      <span>{item.referencia}</span>
+                      <time className="home-texto-chico" dateTime={item.created_at}>
+                        {tiempoRelativo(item.created_at)}
+                      </time>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          </div>
         </>
       )}
     </main>

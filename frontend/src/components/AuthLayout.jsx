@@ -1,3 +1,5 @@
+import Logo from "./Logo.jsx";
+import Disco from "./Disco.jsx";
 import "./AuthLayout.css";
 
 export default function AuthLayout({ discos, children }) {
@@ -5,12 +7,7 @@ export default function AuthLayout({ discos, children }) {
     <div className="auth">
       <aside className="auth-panel">
         <div className="auth-logo">
-          <span className="auth-logo-icono">
-            <span className="auth-logo-disco" />
-          </span>
-          <span>
-            Sound<span className="auth-acento">Shelf</span>
-          </span>
+          <Logo />
         </div>
 
         <h1 className="auth-titulo">
@@ -23,9 +20,7 @@ export default function AuthLayout({ discos, children }) {
 
         <div className="auth-discos">
           {discos.map((color) => (
-            <div key={color} className={`auth-disco auth-disco-${color}`}>
-              <span className="auth-disco-vinilo" />
-            </div>
+            <Disco key={color} color={color} />
           ))}
         </div>
       </aside>
