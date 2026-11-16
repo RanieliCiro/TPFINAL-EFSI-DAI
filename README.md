@@ -1,4 +1,6 @@
-En este commit hicimos el login y el registro de usuarios.
+En este commit (y en b3aa1c7) maquetamos el login y el registro segun el Figma, e hicimos la home con las canciones recientes y la actividad del usuario (GET /api/library y GET /api/activity).
+
+En el commit anterior (3437a9b) hicimos el login y el registro de usuarios.
 En el backend armamos las rutas para registrarse, iniciar sesion y ver el usuario logueado, con la contraseña encriptada y un token que dura 7 dias.
 En el frontend armamos las pantallas de login y registro, y un inicio provisorio que saluda al usuario y deja cerrar sesion.
 
