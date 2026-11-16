@@ -5,40 +5,19 @@
 }
 
 .auth-panel {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 24px;
   padding: 48px 64px;
   background: var(--color-fondo);
-  position: relative;
 }
 
 .auth-logo {
   position: absolute;
   top: 40px;
   left: 64px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 700;
-}
-
-.auth-logo-icono {
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  background: var(--color-acento);
-  border-radius: var(--radio);
-}
-
-.auth-logo-disco {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 5px solid var(--color-fondo);
-  background: var(--color-acento);
 }
 
 .auth-acento {
@@ -59,67 +38,10 @@
 }
 
 .auth-discos {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 96px);
   gap: 16px;
   margin-top: 24px;
-}
-
-.auth-disco {
-  width: 96px;
-  height: 96px;
-  display: grid;
-  place-items: center;
-  border-radius: var(--radio);
-  background: var(--fondo-disco);
-  position: relative;
-}
-
-.auth-disco::after {
-  content: "";
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 12px;
-  height: 2px;
-  background: var(--color-disco-crema);
-}
-
-.auth-disco-vinilo {
-  width: 60px;
-  height: 60px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--vinilo);
-}
-
-.auth-disco-vinilo::after {
-  content: "";
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 6px solid var(--fondo-disco);
-  background: var(--vinilo);
-}
-
-.auth-disco-marron {
-  --fondo-disco: var(--color-disco-marron);
-  --vinilo: var(--color-disco-naranja);
-}
-
-.auth-disco-naranja {
-  --fondo-disco: var(--color-disco-naranja);
-  --vinilo: var(--color-disco-crema);
-}
-
-.auth-disco-verde {
-  --fondo-disco: var(--color-disco-verde);
-  --vinilo: var(--color-disco-crema);
-}
-
-.auth-disco-violeta {
-  --fondo-disco: var(--color-disco-violeta);
-  --vinilo: var(--color-disco-crema);
 }
 
 .auth-contenido {

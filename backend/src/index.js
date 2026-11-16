@@ -4,6 +4,9 @@ import cors from "cors";
 import authRoutes from "./routes/auth.js";
 import libraryRoutes from "./routes/library.js";
 import activityRoutes from "./routes/activity.js";
+import statsRoutes from "./routes/stats.js";
+import collectionsRoutes from "./routes/collections.js";
+import musicRoutes from "./routes/music.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +21,9 @@ app.get("/api/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/library", libraryRoutes);
 app.use("/api/activity", activityRoutes);
+app.use("/api/stats", statsRoutes);
+app.use("/api/collections", collectionsRoutes);
+app.use("/api/music", musicRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);

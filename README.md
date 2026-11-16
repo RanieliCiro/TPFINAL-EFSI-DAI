@@ -1,4 +1,6 @@
-En este commit (y en b3aa1c7) maquetamos el login y el registro segun el Figma, e hicimos la home con las canciones recientes y la actividad del usuario (GET /api/library y GET /api/activity).
+En este commit dejamos la home igual al Figma: barra lateral, contadores, playlists y canciones destacadas de iTunes (GET /api/stats, GET /api/collections y GET /api/music/search).
+
+En los commits anteriores (02bb0b9 y b3aa1c7) maquetamos el login y el registro segun el Figma, e hicimos la home con las canciones recientes y la actividad del usuario (GET /api/library y GET /api/activity).
 
 En el commit anterior (3437a9b) hicimos el login y el registro de usuarios.
 En el backend armamos las rutas para registrarse, iniciar sesion y ver el usuario logueado, con la contraseña encriptada y un token que dura 7 dias.

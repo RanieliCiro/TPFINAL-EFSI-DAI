@@ -1,0 +1,66 @@
+.disco {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radio);
+  background: var(--fondo-disco);
+}
+
+.disco::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 9%;
+  height: 2px;
+  background: var(--color-disco-crema);
+}
+
+.disco-vinilo {
+  width: 66%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--vinilo);
+}
+
+.disco-vinilo::after {
+  content: "";
+  width: 32%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--fondo-disco);
+}
+
+.disco-marron {
+  --fondo-disco: var(--color-disco-marron);
+  --vinilo: var(--color-disco-naranja);
+}
+
+.disco-naranja {
+  --fondo-disco: var(--color-disco-naranja);
+  --vinilo: var(--color-disco-arena);
+}
+
+.disco-verde {
+  --fondo-disco: var(--color-disco-verde);
+  --vinilo: var(--color-disco-crema);
+}
+
+.disco-violeta {
+  --fondo-disco: var(--color-disco-violeta);
+  --vinilo: var(--color-disco-lila);
+}
+
+.disco-terracota {
+  --fondo-disco: var(--color-disco-terracota);
+  --vinilo: var(--color-disco-arena);
+}
+
+.disco-azul {
+  --fondo-disco: var(--color-disco-azul);
+  --vinilo: var(--color-disco-celeste);
+}

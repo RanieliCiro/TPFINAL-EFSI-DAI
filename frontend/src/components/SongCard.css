@@ -1,25 +1,37 @@
 .song-card {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   min-width: 0;
 }
 
 .song-card-portada {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.song-card-imagen {
+  display: block;
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: var(--radio);
-  margin-bottom: 4px;
 }
 
-.song-card-sin-portada {
-  background: var(--color-input);
+.song-card-genero {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 2px 8px;
+  border-radius: var(--radio);
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  font-size: 0.7rem;
 }
 
 .song-card-titulo {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -27,7 +39,7 @@
 }
 
 .song-card-artista {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--color-texto-secundario);
   white-space: nowrap;
   overflow: hidden;
