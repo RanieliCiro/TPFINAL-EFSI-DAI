@@ -93,7 +93,7 @@
   border: none;
   border-radius: var(--radio);
   background: var(--color-acento);
-  color: var(--color-texto);
+  color: var(--color-fondo);
   font-weight: 600;
 }
 
