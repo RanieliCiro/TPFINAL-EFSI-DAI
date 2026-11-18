@@ -1,4 +1,9 @@
-En este commit dejamos la home igual al Figma: barra lateral, contadores, playlists y canciones destacadas de iTunes (GET /api/stats, GET /api/collections y GET /api/music/search).
+En este commit programamos la busqueda de canciones en la pagina Explorar (/explore).
+Se escribe algo, se busca con Enter o con el boton y se muestran las canciones que trae iTunes (GET /api/music/search). Lo buscado queda en la URL, asi al volver atras la busqueda sigue estando.
+Los resultados se pueden filtrar por genero y ordenar por titulo, artista o año. Tambien se muestran mensajes de carga, de error y cuando no hay resultados.
+Ademas pedimos las portadas a iTunes en 300x300 para que no se vean pixeladas y agregamos en index.css estilos que comparten varias paginas (botones, selects, formularios).
+
+En el commit anterior (3c1bdb8) dejamos la home igual al Figma: barra lateral, contadores, playlists y canciones destacadas de iTunes (GET /api/stats, GET /api/collections y GET /api/music/search).
 
 En los commits anteriores (02bb0b9 y b3aa1c7) maquetamos el login y el registro segun el Figma, e hicimos la home con las canciones recientes y la actividad del usuario (GET /api/library y GET /api/activity).
 

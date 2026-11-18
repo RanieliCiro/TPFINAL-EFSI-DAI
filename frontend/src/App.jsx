@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Home from "./pages/Home.jsx";
+import Explore from "./pages/Explore.jsx";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
         }
       >
         <Route path="/" element={<Home />} />
+        <Route path="/explore" element={<Explore />} />
       </Route>
     </Routes>
   );

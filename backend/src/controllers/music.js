@@ -7,7 +7,7 @@ function formatearCancion(resultado) {
     titulo: resultado.trackName,
     artista: resultado.artistName,
     album: resultado.collectionName,
-    portada_url: resultado.artworkUrl100,
+    portada_url: resultado.artworkUrl100?.replace("100x100bb", "300x300bb"),
     genero: resultado.primaryGenreName,
     anio: resultado.releaseDate ? new Date(resultado.releaseDate).getFullYear() : null,
   };
