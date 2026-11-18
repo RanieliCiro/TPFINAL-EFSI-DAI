@@ -1,0 +1,179 @@
+.modal-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(10, 6, 4, 0.7);
+}
+
+.modal {
+  width: 100%;
+  max-width: 440px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px;
+  border: 1px solid var(--color-borde);
+  border-radius: 10px;
+  background: var(--color-tarjeta-destacada);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+.modal-encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-titulo {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.modal-cerrar {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-texto-secundario);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.modal-cerrar:hover {
+  color: var(--color-texto);
+}
+
+.modal-foto {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.modal-link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-acento);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.modal-link:hover {
+  color: var(--color-acento-hover);
+}
+
+.modal-link-secundario {
+  margin-left: 12px;
+  color: var(--color-texto-secundario);
+  font-weight: 400;
+}
+
+.modal-ayuda {
+  color: var(--color-texto-secundario);
+  font-size: 0.72rem;
+}
+
+.modal-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-etiqueta {
+  padding: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.modal-bio {
+  width: 100%;
+  resize: vertical;
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 10px 12px;
+  background: var(--color-input);
+  color: var(--color-texto);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+}
+
+.modal-bio::placeholder {
+  color: var(--color-texto-secundario);
+}
+
+.modal-bio:focus {
+  outline: none;
+  border-color: var(--color-acento);
+}
+
+.modal-generos {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.modal-generos .modal-etiqueta {
+  margin-bottom: 6px;
+}
+
+.modal-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.modal-chip {
+  padding: 5px 12px;
+  border: 1px solid var(--color-borde);
+  border-radius: 999px;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.modal-chip.activo {
+  border-color: var(--color-acento);
+  background: var(--color-acento);
+  color: var(--color-fondo);
+}
+
+.modal-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.modal-cancelar,
+.modal-guardar {
+  padding: 9px 18px;
+  border: 0;
+  border-radius: var(--radio);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.modal-cancelar {
+  background: var(--color-tarjeta);
+  color: var(--color-texto);
+}
+
+.modal-cancelar:hover {
+  background: var(--color-input);
+}
+
+.modal-guardar {
+  background: var(--color-acento);
+  color: var(--color-fondo);
+}
+
+.modal-guardar:hover:not(:disabled) {
+  background: var(--color-acento-hover);
+}
