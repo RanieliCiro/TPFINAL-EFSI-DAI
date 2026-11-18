@@ -1,4 +1,9 @@
-En este commit programamos el detalle de canciones (/song/:trackId).
+En este commit programamos las playlists.
+En el backend se pueden ver todas (GET /api/collections), crear una (POST /api/collections), ver una con sus canciones (GET /api/collections/:id), editarla (PATCH /api/collections/:id) y borrarla (DELETE /api/collections/:id). Tambien agregarles canciones de la biblioteca (POST /api/collections/:id/items) y quitarlas (DELETE /api/collections/:id/items/:itemId). Todo queda en la actividad.
+En el frontend hicimos la pagina Playlists, con el formulario para crear una, y la pagina del detalle de la playlist, donde se edita, se borra y se agregan o quitan canciones.
+En el detalle de cancion agregamos la seccion para agregarla o quitarla de cada playlist, y en la barra lateral "Playlists" queda marcado tambien adentro de una playlist.
+
+En el commit anterior (59039d0) programamos el detalle de canciones (/song/:trackId).
 En el backend agregamos GET /api/music/:id, que busca la cancion en iTunes y le suma lo que el usuario tiene guardado de ella (si esta en su biblioteca y su reseña).
 Tambien armamos la biblioteca: guardar una cancion con los datos que manda el frontend (POST /api/library), cambiarle el estado, marcarla como favorita o puntuarla de 1 a 5 (PATCH /api/library/:id) y quitarla (DELETE /api/library/:id).
 Y las reseñas: ver todas (GET /api/reviews), crear una (POST /api/reviews), editarla (PATCH /api/reviews/:id) y borrarla (DELETE /api/reviews/:id). Hay una sola reseña por cancion y solo de canciones de la biblioteca.

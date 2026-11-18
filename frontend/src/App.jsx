@@ -6,6 +6,8 @@ import Register from "./pages/Register.jsx";
 import Home from "./pages/Home.jsx";
 import Explore from "./pages/Explore.jsx";
 import SongDetail from "./pages/SongDetail.jsx";
+import Playlists from "./pages/Playlists.jsx";
+import PlaylistDetail from "./pages/PlaylistDetail.jsx";
 
 export default function App() {
   return (
@@ -25,6 +27,8 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/song/:trackId" element={<SongDetail />} />
+        <Route path="/playlists" element={<Playlists />} />
+        <Route path="/playlists/:id" element={<PlaylistDetail />} />
       </Route>
     </Routes>
   );

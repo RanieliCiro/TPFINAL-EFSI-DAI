@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getSong } from "../services/music.js";
 import { addToLibrary, updateLibraryItem, removeFromLibrary } from "../services/library.js";
 import { createReview, updateReview, deleteReview } from "../services/reviews.js";
+import { getCollections, addItem, removeItem } from "../services/collections.js";
 import Loader from "../components/Loader.jsx";
 import ErrorMessage from "../components/ErrorMessage.jsx";
 import StarRating from "../components/StarRating.jsx";
@@ -29,6 +30,7 @@ export default function SongDetail() {
   const navigate = useNavigate();
 
   const [detalle, setDetalle] = useState(null);
+  const [misPlaylists, setMisPlaylists] = useState([]);
   const [textoResena, setTextoResena] = useState("");
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
@@ -37,8 +39,9 @@ export default function SongDetail() {
 
   async function cargarDetalle() {
     try {
-      const datos = await getSong(trackId);
+      const [datos, playlists] = await Promise.all([getSong(trackId), getCollections()]);
       setDetalle(datos);
+      setMisPlaylists(playlists);
       setTextoResena(datos.resena?.texto ?? "");
       setError("");
     } catch (err) {
@@ -82,6 +85,14 @@ export default function SongDetail() {
     }
   }
 
+  function handleTogglePlaylist(playlistId, estaEnPlaylist) {
+    if (estaEnPlaylist) {
+      ejecutar(() => removeItem(playlistId, detalle.guardada.id));
+    } else {
+      ejecutar(() => addItem(playlistId, detalle.guardada.id));
+    }
+  }
+
   if (cargando) {
     return (
       <main className="pagina">
@@ -101,7 +112,7 @@ export default function SongDetail() {
     );
   }
 
-  const { cancion, guardada, resena } = detalle;
+  const { cancion, guardada, resena, playlists } = detalle;
   const datosExtra = [cancion.album, cancion.anio, cancion.genero, cancion.duracion_ms && formatearDuracion(cancion.duracion_ms)];
 
   return (
@@ -218,6 +229,33 @@ export default function SongDetail() {
                 )}
               </div>
             </form>
+          </section>
+
+          <section className="tarjeta">
+            <h2 className="pagina-subtitulo">Playlists</h2>
+            {misPlaylists.length === 0 ? (
+              <p className="texto-secundario">
+                Todavía no tenés playlists. <Link to="/playlists">Creá una</Link> para organizar tus canciones.
+              </p>
+            ) : (
+              <ul className="song-detail-playlists">
+                {misPlaylists.map((playlist) => {
+                  const estaEnPlaylist = playlists.includes(playlist.id);
+                  return (
+                    <li key={playlist.id} className="song-detail-fila">
+                      <Link to={`/playlists/${playlist.id}`}>{playlist.nombre}</Link>
+                      <button
+                        className={estaEnPlaylist ? "boton boton-secundario boton-chico" : "boton boton-chico"}
+                        onClick={() => handleTogglePlaylist(playlist.id, estaEnPlaylist)}
+                        disabled={procesando}
+                      >
+                        {estaEnPlaylist ? "✓ Quitar" : "+ Agregar"}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </section>
         </>
       )}

@@ -1,0 +1,158 @@
+.playlists-encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.playlists-grilla {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.playlists-tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: 100%;
+  padding: 16px;
+  border-radius: var(--radio);
+  background: var(--color-tarjeta);
+  color: var(--color-texto);
+}
+
+.playlists-tarjeta:hover {
+  text-decoration: none;
+  background: var(--color-tarjeta-destacada);
+}
+
+.playlists-disco {
+  margin-bottom: 8px;
+}
+
+.playlists-nombre {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.playlists-descripcion {
+  font-size: 0.8rem;
+  color: var(--color-texto-secundario);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.playlist-detalle-cabecera {
+  display: flex;
+  gap: 24px;
+  align-items: flex-end;
+}
+
+.playlist-detalle-disco {
+  width: 160px;
+  flex-shrink: 0;
+}
+
+.playlist-detalle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.playlist-detalle-agregar {
+  display: flex;
+  gap: 12px;
+}
+
+.playlist-canciones {
+  margin: 0;
+  padding: 8px 16px;
+  list-style: none;
+  border-radius: var(--radio);
+  background: var(--color-tarjeta);
+}
+
+.playlist-cancion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.playlist-cancion + .playlist-cancion {
+  border-top: 1px solid var(--color-borde);
+}
+
+.playlist-cancion-numero {
+  width: 20px;
+  flex-shrink: 0;
+  color: var(--color-texto-secundario);
+  font-size: 0.8rem;
+  text-align: right;
+}
+
+.playlist-cancion-portada {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.playlist-cancion-portada img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radio);
+}
+
+.playlist-cancion-datos {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  font-size: 0.9rem;
+  color: var(--color-texto);
+}
+
+.playlist-cancion-datos:hover {
+  text-decoration: none;
+  color: var(--color-acento);
+}
+
+.playlist-cancion-datos strong,
+.playlist-cancion-datos span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1024px) {
+  .playlists-grilla {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .playlists-encabezado,
+  .playlist-detalle-cabecera,
+  .playlist-detalle-agregar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .playlists-grilla {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .playlist-detalle-disco {
+    width: 120px;
+  }
+}
