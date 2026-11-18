@@ -1,4 +1,11 @@
-En este commit programamos la busqueda de canciones en la pagina Explorar (/explore).
+En este commit programamos el detalle de canciones (/song/:trackId).
+En el backend agregamos GET /api/music/:id, que busca la cancion en iTunes y le suma lo que el usuario tiene guardado de ella (si esta en su biblioteca y su reseña).
+Tambien armamos la biblioteca: guardar una cancion con los datos que manda el frontend (POST /api/library), cambiarle el estado, marcarla como favorita o puntuarla de 1 a 5 (PATCH /api/library/:id) y quitarla (DELETE /api/library/:id).
+Y las reseñas: ver todas (GET /api/reviews), crear una (POST /api/reviews), editarla (PATCH /api/reviews/:id) y borrarla (DELETE /api/reviews/:id). Hay una sola reseña por cancion y solo de canciones de la biblioteca.
+Cada accion se guarda en la tabla actividad con utils/actividad.js, y la home ahora muestra la actividad segun el tipo. Las tarjetas de canciones de la home y de Explorar llevan al detalle.
+En el frontend hicimos la pagina del detalle y el componente StarRating para puntuar con estrellas.
+
+En el commit anterior (578edb1) programamos la busqueda de canciones en la pagina Explorar (/explore).
 Se escribe algo, se busca con Enter o con el boton y se muestran las canciones que trae iTunes (GET /api/music/search). Lo buscado queda en la URL, asi al volver atras la busqueda sigue estando.
 Los resultados se pueden filtrar por genero y ordenar por titulo, artista o año. Tambien se muestran mensajes de carga, de error y cuando no hay resultados.
 Ademas pedimos las portadas a iTunes en 300x300 para que no se vean pixeladas y agregamos en index.css estilos que comparten varias paginas (botones, selects, formularios).

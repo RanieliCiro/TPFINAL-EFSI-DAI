@@ -19,6 +19,19 @@ const ACTIVIDAD_VISIBLE = 4;
 const MS_POR_MINUTO = 60000;
 const MINUTOS_POR_HORA = 60;
 const HORAS_POR_DIA = 24;
+const TEXTOS_ACTIVIDAD = {
+  agregar_cancion: "Agregaste a tu biblioteca",
+  quitar_cancion: "Quitaste de tu biblioteca",
+  cambiar_estado: "Cambiaste el estado de",
+  favorito: "Marcaste como favorita",
+  puntuar: "Puntuaste",
+  crear_playlist: "Creaste la playlist",
+  borrar_playlist: "Borraste la playlist",
+  agregar_a_playlist: "Agregaste a una playlist",
+  quitar_de_playlist: "Quitaste de una playlist",
+  crear_resena: "Escribiste una reseña de",
+  editar_resena: "Editaste la reseña de",
+};
 
 function tiempoRelativo(fecha) {
   const minutos = Math.floor((Date.now() - new Date(fecha)) / MS_POR_MINUTO);
@@ -132,7 +145,7 @@ export default function Home() {
             ) : (
               <div className="home-canciones">
                 {datos.recientes.map((cancion) => (
-                  <SongCard key={cancion.id} cancion={cancion} />
+                  <SongCard key={cancion.id} cancion={cancion} to={`/song/${cancion.track_id}`} />
                 ))}
               </div>
             )}
@@ -153,7 +166,12 @@ export default function Home() {
             ) : (
               <div className="home-canciones">
                 {datos.destacadas.map((cancion) => (
-                  <SongCard key={cancion.track_id} cancion={cancion} mostrarGenero />
+                  <SongCard
+                    key={cancion.track_id}
+                    cancion={cancion}
+                    mostrarGenero
+                    to={`/song/${cancion.track_id}`}
+                  />
                 ))}
               </div>
             )}
@@ -199,7 +217,9 @@ export default function Home() {
                 <ul className="home-lista">
                   {datos.actividad.map((item) => (
                     <li key={item.id} className="home-actividad-item">
-                      <span>{item.referencia}</span>
+                      <span>
+                        {TEXTOS_ACTIVIDAD[item.tipo]} <strong>{item.referencia}</strong>
+                      </span>
                       <time className="home-texto-chico" dateTime={item.created_at}>
                         {tiempoRelativo(item.created_at)}
                       </time>

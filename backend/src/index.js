@@ -7,6 +7,7 @@ import activityRoutes from "./routes/activity.js";
 import statsRoutes from "./routes/stats.js";
 import collectionsRoutes from "./routes/collections.js";
 import musicRoutes from "./routes/music.js";
+import reviewsRoutes from "./routes/reviews.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,6 +25,7 @@ app.use("/api/activity", activityRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/collections", collectionsRoutes);
 app.use("/api/music", musicRoutes);
+app.use("/api/reviews", reviewsRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);

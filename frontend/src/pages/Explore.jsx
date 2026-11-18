@@ -161,6 +161,7 @@ export default function Explore() {
                   key={cancion.track_id}
                   cancion={cancion}
                   mostrarGenero
+                  to={`/song/${cancion.track_id}`}
                 />
               ))}
             </div>
