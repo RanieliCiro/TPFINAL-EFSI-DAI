@@ -9,10 +9,19 @@ function crearToken(id) {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 }
 
+function esTextoConValor(valor) {
+  return typeof valor === "string" && valor.length > 0;
+}
+
 export async function register(req, res) {
   const { username, email, password, confirmPassword } = req.body ?? {};
 
-  if (!username || !email || !password || !confirmPassword) {
+  if (
+    !esTextoConValor(username) ||
+    !esTextoConValor(email) ||
+    !esTextoConValor(password) ||
+    !esTextoConValor(confirmPassword)
+  ) {
     return res.status(400).json({ error: "Todos los campos son obligatorios" });
   }
 
@@ -66,7 +75,7 @@ export async function register(req, res) {
 export async function login(req, res) {
   const { email, password } = req.body ?? {};
 
-  if (!email || !password) {
+  if (!esTextoConValor(email) || !esTextoConValor(password)) {
     return res.status(400).json({ error: "Email y contraseña son obligatorios" });
   }
 

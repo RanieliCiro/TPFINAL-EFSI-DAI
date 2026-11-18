@@ -44,6 +44,18 @@ function tiempoRelativo(fecha) {
   return `Hace ${dias} días`;
 }
 
+async function buscarDestacadas(generos) {
+  if (generos.length === 0) {
+    return [];
+  }
+
+  try {
+    return await searchMusic(generos[0].genero);
+  } catch (err) {
+    return [];
+  }
+}
+
 export default function Home() {
   const [datos, setDatos] = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -59,10 +71,7 @@ export default function Home() {
           getCollections(),
         ]);
 
-        let destacadas = [];
-        if (stats.generos.length > 0) {
-          destacadas = await searchMusic(stats.generos[0].genero);
-        }
+        const destacadas = await buscarDestacadas(stats.generos);
 
         setDatos({
           recientes: biblioteca.slice(0, CANCIONES_RECIENTES),
@@ -88,7 +97,7 @@ export default function Home() {
           <p className="home-texto-secundario">Tu música, organizada a tu manera.</p>
         </div>
         <Link to="/explore" className="home-boton">
-          Explorar música
+          + Explorar música
         </Link>
       </header>
 
