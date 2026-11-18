@@ -1,0 +1,17 @@
+.star-rating {
+  display: flex;
+  gap: 2px;
+}
+
+.star-rating-estrella {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-borde);
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.star-rating-estrella.activa {
+  color: var(--color-acento);
+}
