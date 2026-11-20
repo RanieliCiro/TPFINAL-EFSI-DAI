@@ -1,12 +1,21 @@
 import "dotenv/config";
+import { readFile } from "node:fs/promises";
 import bcrypt from "bcryptjs";
 import pool from "../src/db.js";
 
+const AVATAR_DEMO =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#cf7f3a"/><circle cx="50" cy="50" r="30" fill="#1c1410"/><circle cx="50" cy="50" r="8" fill="#ecdcc0"/></svg>'
+  );
+
 const USUARIO_DEMO = {
   username: "demo",
-  email: "demo@soundshelf.com",
-  password: "123456",
+  email: process.env.DEMO_EMAIL,
+  password: process.env.DEMO_PASSWORD,
   bio: "Fan de los vinilos y de las playlists para cada momento.",
+  preferencias: "Pop,Indie",
+  avatar: AVATAR_DEMO,
 };
 const RONDAS_HASH = 10;
 
@@ -115,6 +124,45 @@ const CANCIONES = [
     puntuacion: null,
     dias: 100,
   },
+  {
+    track_id: 1450695739,
+    titulo: "bad guy",
+    artista: "Billie Eilish",
+    album: "WHEN WE ALL FALL ASLEEP, WHERE DO WE GO?",
+    portada_url: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/1a/37/d1/1a37d1b1-8508-54f2-f541-bf4e437dda76/19UMGIM05028.rgb.jpg/100x100bb.jpg",
+    genero: "Alternative",
+    anio: 2019,
+    estado: "escuchado",
+    favorito: true,
+    puntuacion: 4,
+    dias: 5,
+  },
+  {
+    track_id: 697195462,
+    titulo: "One More Time",
+    artista: "Daft Punk",
+    album: "Discovery",
+    portada_url: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/fd/4a/77/fd4a77db-0ebc-d043-41a2-f32fa1bb0fb4/dj.qrikkdwj.jpg/100x100bb.jpg",
+    genero: "Dance",
+    anio: 2000,
+    estado: "escuchando",
+    favorito: true,
+    puntuacion: null,
+    dias: 8,
+  },
+  {
+    track_id: 1679849823,
+    titulo: "Creep (Acoustic)",
+    artista: "Radiohead",
+    album: "Creep - EP",
+    portada_url: "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/28/7a/7c/287a7ca9-ed95-1a21-e3bb-4559a1a0ac0e/191404134351.png/100x100bb.jpg",
+    genero: "Alternative",
+    anio: 1992,
+    estado: "quiero_escuchar",
+    favorito: false,
+    puntuacion: null,
+    dias: 25,
+  },
 ];
 
 const PLAYLISTS = [
@@ -138,11 +186,23 @@ const PLAYLISTS = [
   },
 ];
 
-const RESENA = {
-  track_id: 6781024437,
-  texto: "Un clásico que no pasa de moda. Cada parte suena como una canción distinta.",
-  dias: 65,
-};
+const RESENAS = [
+  {
+    track_id: 6781024437,
+    texto: "Un clásico que no pasa de moda. Cada parte suena como una canción distinta.",
+    dias: 65,
+  },
+  {
+    track_id: 663097965,
+    texto: "El riff del principio ya te atrapa. Ideal para escuchar de noche.",
+    dias: 35,
+  },
+  {
+    track_id: 1640157165,
+    texto: "Muy linda para escuchar tranquilo. No me canso de ponerla.",
+    dias: 0,
+  },
+];
 
 async function registrarActividad(usuarioId, tipo, referencia, dias) {
   await pool.query(
@@ -153,14 +213,26 @@ async function registrarActividad(usuarioId, tipo, referencia, dias) {
 }
 
 async function seed() {
-  await pool.query("DELETE FROM usuarios WHERE email = $1", [USUARIO_DEMO.email]);
+  if (!USUARIO_DEMO.email || !USUARIO_DEMO.password) {
+    throw new Error("Faltan DEMO_EMAIL y DEMO_PASSWORD en el archivo .env");
+  }
+
+  const schema = await readFile(new URL("./schema.sql", import.meta.url), "utf8");
+  await pool.query(schema);
 
   const passwordHash = await bcrypt.hash(USUARIO_DEMO.password, RONDAS_HASH);
   const usuario = await pool.query(
-    `INSERT INTO usuarios (username, email, password_hash, bio)
-     VALUES ($1, $2, $3, $4)
+    `INSERT INTO usuarios (username, email, password_hash, bio, preferencias, avatar)
+     VALUES ($1, $2, $3, $4, $5, $6)
      RETURNING id`,
-    [USUARIO_DEMO.username, USUARIO_DEMO.email, passwordHash, USUARIO_DEMO.bio]
+    [
+      USUARIO_DEMO.username,
+      USUARIO_DEMO.email.trim().toLowerCase(),
+      passwordHash,
+      USUARIO_DEMO.bio,
+      USUARIO_DEMO.preferencias,
+      USUARIO_DEMO.avatar,
+    ]
   );
   const usuarioId = usuario.rows[0].id;
 
@@ -191,6 +263,10 @@ async function seed() {
 
     await registrarActividad(usuarioId, "agregar_cancion", cancion.titulo, cancion.dias);
 
+    if (cancion.favorito) {
+      await registrarActividad(usuarioId, "favorito", cancion.titulo, cancion.dias);
+    }
+
     if (cancion.puntuacion) {
       await registrarActividad(
         usuarioId,
@@ -220,16 +296,18 @@ async function seed() {
     await registrarActividad(usuarioId, "crear_playlist", playlist.nombre, playlist.dias);
   }
 
-  const cancionResenada = CANCIONES.find((cancion) => cancion.track_id === RESENA.track_id);
+  for (const resena of RESENAS) {
+    const cancionResenada = CANCIONES.find((cancion) => cancion.track_id === resena.track_id);
 
-  await pool.query(
-    `INSERT INTO resenas (usuario_id, biblioteca_id, texto, created_at, updated_at)
-     VALUES ($1, $2, $3, NOW() - make_interval(days => $4), NOW() - make_interval(days => $4))`,
-    [usuarioId, idsBiblioteca[RESENA.track_id], RESENA.texto, RESENA.dias]
-  );
-  await registrarActividad(usuarioId, "crear_resena", cancionResenada.titulo, RESENA.dias);
+    await pool.query(
+      `INSERT INTO resenas (usuario_id, biblioteca_id, texto, created_at, updated_at)
+       VALUES ($1, $2, $3, NOW() - make_interval(days => $4), NOW() - make_interval(days => $4))`,
+      [usuarioId, idsBiblioteca[resena.track_id], resena.texto, resena.dias]
+    );
+    await registrarActividad(usuarioId, "crear_resena", cancionResenada.titulo, resena.dias);
+  }
 
-  console.log(`Seed listo. Usuario: ${USUARIO_DEMO.email} / ${USUARIO_DEMO.password}`);
+  console.log(`Seed listo. Usuario demo: ${USUARIO_DEMO.email}`);
 }
 
 try {

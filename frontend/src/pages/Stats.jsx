@@ -4,6 +4,13 @@ import Loader from "../components/Loader.jsx";
 import ErrorMessage from "../components/ErrorMessage.jsx";
 import "./Stats.css";
 
+const MESES_VISIBLES = 6;
+
+function nombreMes(mes) {
+  const [anio, numero] = mes.split("-");
+  return new Date(anio, numero - 1).toLocaleDateString("es-AR", { month: "short", year: "numeric" });
+}
+
 export default function Stats() {
   const [datos, setDatos] = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -33,6 +40,10 @@ export default function Stats() {
 
   const generos = datos.generos ?? [];
   const cantidadMaxima = Math.max(...generos.map((genero) => genero.cantidad), 1);
+  const topArtistas = datos.top_artistas ?? [];
+  const mejorPuntuadas = datos.mejor_puntuadas ?? [];
+  const meses = (datos.actividad_por_mes ?? []).slice(-MESES_VISIBLES);
+  const actividadMaxima = Math.max(...meses.map((mes) => mes.cantidad), 1);
   const promedio = datos.promedio_puntuacion == null
     ? "-"
     : `${Number(datos.promedio_puntuacion).toFixed(1).replace(".", ",")} / 5`;
@@ -99,6 +110,61 @@ export default function Stats() {
               <span className="stats-diferentes-texto">Tu colección sigue creciendo.</span>
             </div>
           </div>
+        </article>
+      </section>
+
+      <section className="stats-listas">
+        <article className="stats-panel">
+          <h2 className="stats-panel-titulo">Artistas más guardados</h2>
+          {topArtistas.length === 0 ? (
+            <p className="stats-vacio">Todavía no guardaste canciones.</p>
+          ) : (
+            <ol className="stats-lista">
+              {topArtistas.map((item) => (
+                <li key={item.artista} className="stats-lista-item">
+                  <span className="stats-lista-texto">{item.artista}</span>
+                  <strong className="stats-lista-valor">{item.cantidad}</strong>
+                </li>
+              ))}
+            </ol>
+          )}
+        </article>
+
+        <article className="stats-panel">
+          <h2 className="stats-panel-titulo">Mejor puntuadas</h2>
+          {mejorPuntuadas.length === 0 ? (
+            <p className="stats-vacio">Todavía no puntuaste canciones.</p>
+          ) : (
+            <ol className="stats-lista">
+              {mejorPuntuadas.map((cancion) => (
+                <li key={cancion.id} className="stats-lista-item">
+                  <span className="stats-lista-texto">{cancion.titulo}</span>
+                  <strong className="stats-lista-valor">{cancion.puntuacion} ★</strong>
+                </li>
+              ))}
+            </ol>
+          )}
+        </article>
+
+        <article className="stats-panel">
+          <h2 className="stats-panel-titulo">Actividad por mes</h2>
+          {meses.length === 0 ? (
+            <p className="stats-vacio">Todavía no hay actividad.</p>
+          ) : (
+            <div className="stats-generos">
+              {meses.map((mes) => (
+                <div className="stats-genero" key={mes.mes}>
+                  <span className="stats-genero-nombre">{nombreMes(mes.mes)}</span>
+                  <div className="stats-barra-fondo">
+                    <div
+                      className="stats-barra"
+                      style={{ width: `${(mes.cantidad / actividadMaxima) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </article>
       </section>
     </main>

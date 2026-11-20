@@ -10,6 +10,7 @@ import ErrorMessage from "../components/ErrorMessage.jsx";
 import EmptyState from "../components/EmptyState.jsx";
 import { tiempoRelativo } from "../utils/tiempo.js";
 import { separarGeneros } from "../utils/generos.js";
+import { textoActividad } from "../utils/actividad.js";
 import "./Profile.css";
 
 export default function Profile() {
@@ -105,7 +106,9 @@ export default function Profile() {
               <ul className="profile-actividad">
                 {datos.actividad.map((item) => (
                   <li key={item.id} className="profile-actividad-item">
-                    <span>{item.referencia}</span>
+                    <span>
+                      {textoActividad(item.tipo)} <strong>{item.referencia}</strong>
+                    </span>
                     <time className="profile-actividad-fecha" dateTime={item.created_at}>
                       {tiempoRelativo(item.created_at)}
                     </time>
