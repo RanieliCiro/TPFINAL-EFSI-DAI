@@ -8,7 +8,7 @@ export default function NotFound() {
       <div className="not-found">
         <p className="not-found-codigo">Error 404</p>
         <div>
-          <h2 className="auth-form-titulo">Esta canción no está en la estantería</h2>
+          <h2 className="auth-form-titulo">Esta pantalla no está disponible</h2>
           <p className="auth-form-subtitulo">La página que buscás no existe o cambió de lugar.</p>
         </div>
         <Link to="/" className="auth-boton not-found-boton">
