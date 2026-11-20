@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import Loader from "../components/Loader.jsx";
 import AuthLayout from "../components/AuthLayout.jsx";
@@ -7,6 +7,8 @@ import AuthLayout from "../components/AuthLayout.jsx";
 export default function Login() {
   const { usuario, cargando, login } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const sesionVencida = searchParams.get("sesion") === "vencida";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errores, setErrores] = useState({});
@@ -60,6 +62,16 @@ export default function Login() {
   return (
     <AuthLayout discos={["marron", "naranja", "verde"]}>
       <form className="auth-form" onSubmit={handleSubmit} noValidate>
+        {sesionVencida && (
+          <div className="auth-aviso" role="alert">
+            <span className="auth-aviso-icono">!</span>
+            <div>
+              <p className="auth-aviso-titulo">Tu sesión venció</p>
+              <p className="auth-aviso-texto">Volvé a ingresar para seguir con tu colección.</p>
+            </div>
+          </div>
+        )}
+
         <div>
           <h2 className="auth-form-titulo">Bienvenido de nuevo</h2>
           <p className="auth-form-subtitulo">Ingresá a tu biblioteca musical.</p>

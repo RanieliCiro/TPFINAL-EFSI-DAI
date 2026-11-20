@@ -18,7 +18,7 @@ api.interceptors.response.use(
     const token = localStorage.getItem("token");
     if (error.response?.status === 401 && token) {
       localStorage.removeItem("token");
-      window.location.href = "/login";
+      window.location.href = "/login?sesion=vencida";
     }
     return Promise.reject(error);
   }

@@ -3,9 +3,33 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  padding: 32px 16px;
-  border: 1px dashed var(--color-borde);
+  padding: 32px 24px;
   border-radius: var(--radio);
-  color: var(--color-texto-secundario);
+  background: var(--color-tarjeta);
   text-align: center;
+}
+
+.empty-state-disco {
+  width: 80px;
+  margin-bottom: 12px;
+}
+
+.empty-state-mensaje {
+  max-width: 320px;
+  font-weight: 700;
+}
+
+.empty-state a {
+  margin-top: 12px;
+  padding: 10px 24px;
+  border-radius: var(--radio);
+  background: var(--color-acento);
+  color: var(--color-fondo);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.empty-state a:hover {
+  background: var(--color-acento-hover);
+  text-decoration: none;
 }
