@@ -7,6 +7,7 @@ import activityRoutes from "./routes/activity.js";
 import statsRoutes from "./routes/stats.js";
 import collectionsRoutes from "./routes/collections.js";
 import musicRoutes from "./routes/music.js";
+import reviewsRoutes from "./routes/reviews.js";
 import profileRoutes from "./routes/profile.js";
 
 const app = express();
@@ -26,6 +27,7 @@ app.use("/api/activity", activityRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/collections", collectionsRoutes);
 app.use("/api/music", musicRoutes);
+app.use("/api/reviews", reviewsRoutes);
 app.use("/api/profile", profileRoutes);
 
 app.use((error, req, res, next) => {

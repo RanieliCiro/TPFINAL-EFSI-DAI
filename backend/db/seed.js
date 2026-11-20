@@ -189,13 +189,13 @@ async function seed() {
     );
     idsBiblioteca[cancion.track_id] = resultado.rows[0].id;
 
-    await registrarActividad(usuarioId, "agregar_cancion", `Guardaste "${cancion.titulo}" en tu biblioteca`, cancion.dias);
+    await registrarActividad(usuarioId, "agregar_cancion", cancion.titulo, cancion.dias);
 
     if (cancion.puntuacion) {
       await registrarActividad(
         usuarioId,
         "puntuar",
-        `Puntuaste "${cancion.titulo}" con ${cancion.puntuacion} estrellas`,
+        cancion.titulo,
         cancion.dias
       );
     }
@@ -217,7 +217,7 @@ async function seed() {
       ]);
     }
 
-    await registrarActividad(usuarioId, "crear_playlist", `Creaste la playlist "${playlist.nombre}"`, playlist.dias);
+    await registrarActividad(usuarioId, "crear_playlist", playlist.nombre, playlist.dias);
   }
 
   const cancionResenada = CANCIONES.find((cancion) => cancion.track_id === RESENA.track_id);
@@ -227,7 +227,7 @@ async function seed() {
      VALUES ($1, $2, $3, NOW() - make_interval(days => $4), NOW() - make_interval(days => $4))`,
     [usuarioId, idsBiblioteca[RESENA.track_id], RESENA.texto, RESENA.dias]
   );
-  await registrarActividad(usuarioId, "crear_resena", `Escribiste una reseña de "${cancionResenada.titulo}"`, RESENA.dias);
+  await registrarActividad(usuarioId, "crear_resena", cancionResenada.titulo, RESENA.dias);
 
   console.log(`Seed listo. Usuario: ${USUARIO_DEMO.email} / ${USUARIO_DEMO.password}`);
 }

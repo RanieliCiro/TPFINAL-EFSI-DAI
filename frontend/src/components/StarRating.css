@@ -4,14 +4,23 @@
 }
 
 .star-rating-estrella {
-  padding: 0;
-  border: 0;
-  background: transparent;
+  padding: 0 2px;
+  border: none;
+  background: none;
   color: var(--color-borde);
-  font-size: 0.95rem;
+  font-size: 1.6rem;
   line-height: 1;
 }
 
-.star-rating-estrella.activa {
+.star-rating-llena {
   color: var(--color-acento);
+}
+
+.star-rating-estrella:hover:not(:disabled) {
+  color: var(--color-acento-hover);
+}
+
+.star-rating-estrella:disabled {
+  opacity: 1;
+  cursor: default;
 }

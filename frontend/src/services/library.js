@@ -6,7 +6,8 @@ export async function getLibrary() {
 }
 
 export async function addToLibrary(cancion) {
-  const response = await api.post("/library", cancion);
+  const { track_id, titulo, artista, album, portada_url, genero, anio } = cancion;
+  const response = await api.post("/library", { track_id, titulo, artista, album, portada_url, genero, anio });
   return response.data;
 }
 
@@ -15,6 +16,6 @@ export async function updateLibraryItem(id, cambios) {
   return response.data;
 }
 
-export async function deleteLibraryItem(id) {
+export async function removeFromLibrary(id) {
   await api.delete(`/library/${id}`);
 }

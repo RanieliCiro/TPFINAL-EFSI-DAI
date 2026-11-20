@@ -1,0 +1,39 @@
+.explore-buscador {
+  display: flex;
+  gap: 12px;
+}
+
+.explore-resultados {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.explore-resultados-encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.explore-filtros {
+  display: flex;
+  gap: 8px;
+}
+
+.explore-filtros select {
+  width: auto;
+}
+
+@media (max-width: 767px) {
+  .explore-buscador,
+  .explore-filtros {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .explore-filtros select {
+    width: 100%;
+  }
+}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  deleteLibraryItem,
+  removeFromLibrary,
   getLibrary,
   updateLibraryItem,
 } from "../services/library.js";
@@ -61,7 +61,7 @@ export default function Library() {
     try {
       setActualizando(id);
       setError("");
-      await deleteLibraryItem(id);
+      await removeFromLibrary(id);
       setCanciones((actuales) => actuales.filter((cancion) => cancion.id !== id));
     } catch (err) {
       setError(err.response?.data?.error || "No se pudo quitar la canción");
@@ -150,7 +150,7 @@ export default function Library() {
                   type="button"
                   className={cancion.favorito ? "library-favorito activo" : "library-favorito"}
                   onClick={() => actualizarCancion(cancion.id, { favorito: !cancion.favorito })}
-                  disabled={actualizando === cancion.id}
+                  deshabilitado={actualizando === cancion.id}
                   aria-label={cancion.favorito ? "Quitar de favoritos" : "Agregar a favoritos"}
                 >
                   ♥
@@ -166,7 +166,7 @@ export default function Library() {
                 className="library-estado"
                 value={cancion.estado}
                 onChange={(event) => actualizarCancion(cancion.id, { estado: event.target.value })}
-                disabled={actualizando === cancion.id}
+                deshabilitado={actualizando === cancion.id}
                 aria-label={`Estado de ${cancion.titulo}`}
               >
                 <option value="quiero_escuchar">Quiero escuchar</option>
@@ -176,9 +176,9 @@ export default function Library() {
 
               <div className="library-pie">
                 <StarRating
-                  value={cancion.puntuacion ?? 0}
-                  onChange={(puntuacion) => actualizarCancion(cancion.id, { puntuacion })}
-                  disabled={actualizando === cancion.id}
+                  valor={cancion.puntuacion}
+                  onCambiar={(puntuacion) => actualizarCancion(cancion.id, { puntuacion })}
+                  deshabilitado={actualizando === cancion.id}
                 />
                 <button
                   type="button"

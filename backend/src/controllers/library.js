@@ -1,7 +1,38 @@
 import pool from "../db.js";
 import { registrarActividad } from "../utils/actividad.js";
+import { parsearId } from "../utils/parsearId.js";
 
-const ESTADOS_VALIDOS = ["quiero_escuchar", "escuchando", "escuchado"];
+const ESTADOS = ["quiero_escuchar", "escuchando", "escuchado"];
+const PUNTUACION_MINIMA = 1;
+const PUNTUACION_MAXIMA = 5;
+const LARGO_MAXIMO_TEXTO = 255;
+const LARGO_MAXIMO_GENERO = 100;
+
+function validarCancion({ titulo, artista, album, portada_url, genero, anio }) {
+  if (typeof titulo !== "string" || !titulo.trim() || typeof artista !== "string" || !artista.trim()) {
+    return "La canción tiene que tener título y artista";
+  }
+
+  const opcionales = [album, portada_url, genero];
+  if (opcionales.some((valor) => valor !== undefined && valor !== null && typeof valor !== "string")) {
+    return "Los datos de la canción no son válidos";
+  }
+
+  const textosLargos = [titulo, artista, album].some((valor) => valor && valor.length > LARGO_MAXIMO_TEXTO);
+  if (textosLargos || (genero && genero.length > LARGO_MAXIMO_GENERO)) {
+    return "Los datos de la canción son demasiado largos";
+  }
+
+  if (anio !== undefined && anio !== null && !Number.isInteger(anio)) {
+    return "El año no es válido";
+  }
+
+  return null;
+}
+
+function puntuacionValida(puntuacion) {
+  return Number.isInteger(puntuacion) && puntuacion >= PUNTUACION_MINIMA && puntuacion <= PUNTUACION_MAXIMA;
+}
 
 export async function getLibrary(req, res) {
   try {
@@ -21,152 +52,131 @@ export async function getLibrary(req, res) {
 }
 
 export async function addToLibrary(req, res) {
-  const {
-    track_id,
-    titulo,
-    artista,
-    album,
-    portada_url,
-    genero,
-    anio,
-  } = req.body ?? {};
+  const datos = req.body ?? {};
+  const trackId = parsearId(datos.track_id);
 
-  if (!Number.isSafeInteger(track_id) || track_id <= 0) {
-    return res.status(400).json({ error: "El track_id no es válido" });
+  if (!trackId) {
+    return res.status(400).json({ error: "La canción no es válida" });
   }
 
-  if (!titulo || !artista) {
-    return res.status(400).json({ error: "Título y artista son obligatorios" });
+  const error = validarCancion(datos);
+
+  if (error) {
+    return res.status(400).json({ error });
   }
 
-  if (anio !== undefined && anio !== null && (!Number.isInteger(anio) || anio < 0)) {
-    return res.status(400).json({ error: "El año no es válido" });
-  }
+  const titulo = datos.titulo.trim();
 
   try {
     const resultado = await pool.query(
-      `INSERT INTO biblioteca
-       (usuario_id, track_id, titulo, artista, album, portada_url, genero, anio)
+      `INSERT INTO biblioteca (usuario_id, track_id, titulo, artista, album, portada_url, genero, anio)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       ON CONFLICT (usuario_id, track_id) DO NOTHING
        RETURNING id, track_id, titulo, artista, album, portada_url, genero, anio,
                  estado, favorito, puntuacion, created_at`,
       [
         req.usuario.id,
-        track_id,
-        titulo.trim(),
-        artista.trim(),
-        album?.trim() || null,
-        portada_url?.trim() || null,
-        genero?.trim() || null,
-        anio ?? null,
+        trackId,
+        titulo,
+        datos.artista.trim(),
+        datos.album || null,
+        datos.portada_url || null,
+        datos.genero || null,
+        datos.anio ?? null,
       ]
     );
 
-    await registrarActividad(req.usuario.id, "agregar_cancion", titulo.trim());
-    res.status(201).json(resultado.rows[0]);
-  } catch (error) {
-    if (error.code === "23505") {
-      return res.status(409).json({ error: "La canción ya está en la biblioteca" });
+    if (resultado.rows.length === 0) {
+      return res.status(409).json({ error: "La canción ya está en tu biblioteca" });
     }
 
-    res.status(500).json({ error: "Error al agregar la canción" });
+    await registrarActividad(req.usuario.id, "agregar_cancion", titulo);
+    res.status(201).json(resultado.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: "Error al guardar la canción" });
   }
 }
 
 export async function updateLibraryItem(req, res) {
-  const { id } = req.params;
-  const { estado, favorito, puntuacion } = req.body ?? {};
+  const id = parsearId(req.params.id);
+  const cambios = req.body ?? {};
 
-  if (!Number.isInteger(Number(id))) {
-    return res.status(400).json({ error: "El id no es válido" });
+  if (!id) {
+    return res.status(400).json({ error: "La canción no es válida" });
   }
 
-  if (estado !== undefined && !ESTADOS_VALIDOS.includes(estado)) {
+  if (cambios.estado !== undefined && !ESTADOS.includes(cambios.estado)) {
     return res.status(400).json({ error: "El estado no es válido" });
   }
 
-  if (favorito !== undefined && typeof favorito !== "boolean") {
-    return res.status(400).json({ error: "El favorito no es válido" });
+  if (cambios.favorito !== undefined && typeof cambios.favorito !== "boolean") {
+    return res.status(400).json({ error: "El favorito tiene que ser verdadero o falso" });
   }
 
-  if (puntuacion !== undefined && puntuacion !== null && (!Number.isInteger(puntuacion) || puntuacion < 1 || puntuacion > 5)) {
-    return res.status(400).json({ error: "La puntuación debe estar entre 1 y 5" });
-  }
-
-  if (estado === undefined && favorito === undefined && puntuacion === undefined) {
-    return res.status(400).json({ error: "No se indicó ningún cambio" });
+  if (cambios.puntuacion !== undefined && cambios.puntuacion !== null && !puntuacionValida(cambios.puntuacion)) {
+    return res.status(400).json({ error: "La puntuación tiene que ser de 1 a 5" });
   }
 
   try {
-    const existente = await pool.query(
-      "SELECT id, titulo, estado, favorito, puntuacion FROM biblioteca WHERE id = $1 AND usuario_id = $2",
-      [id, req.usuario.id]
-    );
+    const actual = await pool.query("SELECT * FROM biblioteca WHERE id = $1 AND usuario_id = $2", [
+      id,
+      req.usuario.id,
+    ]);
 
-    if (existente.rows.length === 0) {
-      return res.status(404).json({ error: "Canción no encontrada" });
+    if (actual.rows.length === 0) {
+      return res.status(404).json({ error: "La canción no está en tu biblioteca" });
     }
+
+    const anterior = actual.rows[0];
+    const estado = cambios.estado ?? anterior.estado;
+    const favorito = cambios.favorito ?? anterior.favorito;
+    const puntuacion = cambios.puntuacion !== undefined ? cambios.puntuacion : anterior.puntuacion;
 
     const resultado = await pool.query(
-      `UPDATE biblioteca
-       SET estado = COALESCE($1, estado),
-           favorito = COALESCE($2, favorito),
-           puntuacion = CASE WHEN $3 THEN NULL ELSE COALESCE($4, puntuacion) END
-       WHERE id = $5 AND usuario_id = $6
+      `UPDATE biblioteca SET estado = $1, favorito = $2, puntuacion = $3
+       WHERE id = $4
        RETURNING id, track_id, titulo, artista, album, portada_url, genero, anio,
                  estado, favorito, puntuacion, created_at`,
-      [
-        estado ?? null,
-        favorito ?? null,
-        puntuacion === null,
-        puntuacion ?? null,
-        id,
-        req.usuario.id,
-      ]
+      [estado, favorito, puntuacion, id]
     );
 
-    const actual = resultado.rows[0];
-
-    if (estado !== undefined && estado !== existente.rows[0].estado) {
-      await registrarActividad(req.usuario.id, "cambiar_estado", `${actual.titulo}: ${estado}`);
+    if (estado !== anterior.estado) {
+      await registrarActividad(req.usuario.id, "cambiar_estado", anterior.titulo);
     }
 
-    if (favorito !== undefined && favorito !== existente.rows[0].favorito) {
-      await registrarActividad(req.usuario.id, "favorito", actual.titulo);
+    if (favorito && !anterior.favorito) {
+      await registrarActividad(req.usuario.id, "favorito", anterior.titulo);
     }
 
-    if (puntuacion !== undefined && puntuacion !== existente.rows[0].puntuacion) {
-      const referencia = puntuacion === null ? actual.titulo : `${actual.titulo}: ${puntuacion}/5`;
-      await registrarActividad(req.usuario.id, "puntuar", referencia);
+    if (puntuacion && puntuacion !== anterior.puntuacion) {
+      await registrarActividad(req.usuario.id, "puntuar", anterior.titulo);
     }
 
-    res.json(actual);
+    res.json(resultado.rows[0]);
   } catch (error) {
     res.status(500).json({ error: "Error al actualizar la canción" });
   }
 }
 
-export async function deleteLibraryItem(req, res) {
-  const { id } = req.params;
+export async function removeFromLibrary(req, res) {
+  const id = parsearId(req.params.id);
 
-  if (!Number.isInteger(Number(id))) {
-    return res.status(400).json({ error: "El id no es válido" });
+  if (!id) {
+    return res.status(400).json({ error: "La canción no es válida" });
   }
 
   try {
     const resultado = await pool.query(
-      `DELETE FROM biblioteca
-       WHERE id = $1 AND usuario_id = $2
-       RETURNING titulo`,
+      "DELETE FROM biblioteca WHERE id = $1 AND usuario_id = $2 RETURNING titulo",
       [id, req.usuario.id]
     );
 
     if (resultado.rows.length === 0) {
-      return res.status(404).json({ error: "Canción no encontrada" });
+      return res.status(404).json({ error: "La canción no está en tu biblioteca" });
     }
 
     await registrarActividad(req.usuario.id, "quitar_cancion", resultado.rows[0].titulo);
-    res.status(204).send();
+    res.status(204).end();
   } catch (error) {
     res.status(500).json({ error: "Error al quitar la canción" });
   }

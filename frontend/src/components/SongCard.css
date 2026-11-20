@@ -5,6 +5,22 @@
   min-width: 0;
 }
 
+.song-card-link {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  color: var(--color-texto);
+}
+
+.song-card-link:hover {
+  text-decoration: none;
+}
+
+.song-card-link:hover .song-card-titulo {
+  color: var(--color-acento);
+}
+
 .song-card-portada {
   position: relative;
   margin-bottom: 8px;

@@ -1,16 +1,20 @@
 import "./StarRating.css";
 
-export default function StarRating({ value, onChange, disabled }) {
+const ESTRELLAS = [1, 2, 3, 4, 5];
+
+export default function StarRating({ valor, onCambiar, deshabilitado }) {
+  const puntuacion = valor ?? 0;
+
   return (
-    <div className="star-rating" aria-label="Puntuación">
-      {[1, 2, 3, 4, 5].map((estrella) => (
+    <div className="star-rating">
+      {ESTRELLAS.map((numero) => (
         <button
-          key={estrella}
+          key={numero}
           type="button"
-          className={estrella <= value ? "star-rating-estrella activa" : "star-rating-estrella"}
-          onClick={() => onChange(estrella)}
-          disabled={disabled}
-          aria-label={`${estrella} estrellas`}
+          className={numero <= puntuacion ? "star-rating-estrella star-rating-llena" : "star-rating-estrella"}
+          onClick={() => onCambiar(numero === valor ? null : numero)}
+          disabled={!onCambiar || deshabilitado}
+          aria-label={numero === 1 ? "1 estrella" : `${numero} estrellas`}
         >
           ★
         </button>

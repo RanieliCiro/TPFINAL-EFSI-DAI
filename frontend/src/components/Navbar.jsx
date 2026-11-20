@@ -82,7 +82,7 @@ export default function Navbar() {
           <NavLink
             key={link.ruta}
             to={link.ruta}
-            end
+            end={link.ruta === "/"}
             className={({ isActive }) => (isActive ? "navbar-link navbar-link-activo" : "navbar-link")}
           >
             <Icono>{link.icono}</Icono>

@@ -4,6 +4,10 @@ import Navbar from "./components/Navbar.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Home from "./pages/Home.jsx";
+import Explore from "./pages/Explore.jsx";
+import SongDetail from "./pages/SongDetail.jsx";
+import Playlists from "./pages/Playlists.jsx";
+import PlaylistDetail from "./pages/PlaylistDetail.jsx";
 import Library from "./pages/Library.jsx";
 import Stats from "./pages/Stats.jsx";
 import Profile from "./pages/Profile.jsx";
@@ -25,6 +29,10 @@ export default function App() {
         }
       >
         <Route path="/" element={<Home />} />
+        <Route path="/explore" element={<Explore />} />
+        <Route path="/song/:trackId" element={<SongDetail />} />
+        <Route path="/playlists" element={<Playlists />} />
+        <Route path="/playlists/:id" element={<PlaylistDetail />} />
         <Route path="/library" element={<Library />} />
         <Route path="/stats" element={<Stats />} />
         <Route path="/profile" element={<Profile />} />
