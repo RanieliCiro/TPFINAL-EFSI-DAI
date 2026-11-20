@@ -90,7 +90,7 @@ export default function Playlists() {
               maxLength="300"
             />
           </label>
-          {errorFormulario && <ErrorMessage mensaje={errorFormulario} />}
+          {errorFormulario && <ErrorMessage mensaje={errorFormulario} sinReintentar />}
           <div className="formulario-botones">
             <button className="boton" type="submit" disabled={creando || !nombre.trim()}>
               {creando ? "Creando..." : "Crear playlist"}

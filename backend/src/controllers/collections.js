@@ -138,11 +138,12 @@ export async function updateCollection(req, res) {
 
     const resultado = await pool.query(
       `UPDATE colecciones SET nombre = $1, descripcion = $2
-       WHERE id = $3
+       WHERE id = $3 AND usuario_id = $4
        RETURNING id, nombre, descripcion, created_at`,
-      [nombre, descripcion, id]
+      [nombre, descripcion, id, req.usuario.id]
     );
 
+    await registrarActividad(req.usuario.id, "editar_playlist", nombre);
     res.json(resultado.rows[0]);
   } catch (err) {
     res.status(500).json({ error: "Error al editar la playlist" });

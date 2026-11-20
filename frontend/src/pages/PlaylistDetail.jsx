@@ -174,7 +174,7 @@ export default function PlaylistDetail() {
         </section>
       )}
 
-      {errorAccion && <ErrorMessage mensaje={errorAccion} />}
+      {errorAccion && <ErrorMessage mensaje={errorAccion} sinReintentar />}
 
       <section className="tarjeta">
         <h2 className="pagina-subtitulo">Agregar canciones</h2>

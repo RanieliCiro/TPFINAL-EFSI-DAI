@@ -7,14 +7,13 @@ import activityRoutes from "./routes/activity.js";
 import statsRoutes from "./routes/stats.js";
 import collectionsRoutes from "./routes/collections.js";
 import musicRoutes from "./routes/music.js";
-import reviewsRoutes from "./routes/reviews.js";
 import profileRoutes from "./routes/profile.js";
+import reviewsRoutes from "./routes/reviews.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({ origin: process.env.FRONTEND_URL }));
-// 3mb para que entre la foto de perfil (2 MB en base64)
 app.use(express.json({ limit: "3mb" }));
 
 app.get("/api/health", (req, res) => {
@@ -27,8 +26,8 @@ app.use("/api/activity", activityRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/collections", collectionsRoutes);
 app.use("/api/music", musicRoutes);
-app.use("/api/reviews", reviewsRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/reviews", reviewsRoutes);
 
 app.use((error, req, res, next) => {
   if (error.type === "entity.too.large") {

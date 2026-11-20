@@ -37,11 +37,12 @@ function puntuacionValida(puntuacion) {
 export async function getLibrary(req, res) {
   try {
     const resultado = await pool.query(
-      `SELECT id, track_id, titulo, artista, album, portada_url, genero, anio,
-              estado, favorito, puntuacion, created_at
-       FROM biblioteca
-       WHERE usuario_id = $1
-       ORDER BY created_at DESC`,
+      `SELECT b.id, b.track_id, b.titulo, b.artista, b.album, b.portada_url, b.genero, b.anio,
+              b.estado, b.favorito, b.puntuacion, b.created_at, r.texto AS resena
+       FROM biblioteca b
+       LEFT JOIN resenas r ON r.biblioteca_id = b.id
+       WHERE b.usuario_id = $1
+       ORDER BY b.created_at DESC`,
       [req.usuario.id]
     );
 
@@ -134,10 +135,10 @@ export async function updateLibraryItem(req, res) {
 
     const resultado = await pool.query(
       `UPDATE biblioteca SET estado = $1, favorito = $2, puntuacion = $3
-       WHERE id = $4
+       WHERE id = $4 AND usuario_id = $5
        RETURNING id, track_id, titulo, artista, album, portada_url, genero, anio,
                  estado, favorito, puntuacion, created_at`,
-      [estado, favorito, puntuacion, id]
+      [estado, favorito, puntuacion, id, req.usuario.id]
     );
 
     if (estado !== anterior.estado) {
