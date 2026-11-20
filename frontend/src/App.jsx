@@ -8,6 +8,10 @@ import Explore from "./pages/Explore.jsx";
 import SongDetail from "./pages/SongDetail.jsx";
 import Playlists from "./pages/Playlists.jsx";
 import PlaylistDetail from "./pages/PlaylistDetail.jsx";
+import Library from "./pages/Library.jsx";
+import Stats from "./pages/Stats.jsx";
+import Profile from "./pages/Profile.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 export default function App() {
   return (
@@ -29,7 +33,11 @@ export default function App() {
         <Route path="/song/:trackId" element={<SongDetail />} />
         <Route path="/playlists" element={<Playlists />} />
         <Route path="/playlists/:id" element={<PlaylistDetail />} />
+        <Route path="/library" element={<Library />} />
+        <Route path="/stats" element={<Stats />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

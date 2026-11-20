@@ -10,15 +10,13 @@ import ErrorMessage from "../components/ErrorMessage.jsx";
 import EmptyState from "../components/EmptyState.jsx";
 import SongCard from "../components/SongCard.jsx";
 import Disco, { COLORES_DISCO } from "../components/Disco.jsx";
+import { tiempoRelativo } from "../utils/tiempo.js";
 import "./Home.css";
 
 const CANCIONES_RECIENTES = 5;
 const CANCIONES_DESTACADAS = 5;
 const PLAYLISTS_VISIBLES = 3;
 const ACTIVIDAD_VISIBLE = 4;
-const MS_POR_MINUTO = 60000;
-const MINUTOS_POR_HORA = 60;
-const HORAS_POR_DIA = 24;
 const TEXTOS_ACTIVIDAD = {
   agregar_cancion: "Agregaste a tu biblioteca",
   quitar_cancion: "Quitaste de tu biblioteca",
@@ -32,30 +30,6 @@ const TEXTOS_ACTIVIDAD = {
   crear_resena: "Escribiste una reseña de",
   editar_resena: "Editaste la reseña de",
 };
-
-function tiempoRelativo(fecha) {
-  const minutos = Math.floor((Date.now() - new Date(fecha)) / MS_POR_MINUTO);
-  const horas = Math.floor(minutos / MINUTOS_POR_HORA);
-  const dias = Math.floor(horas / HORAS_POR_DIA);
-
-  if (minutos < 1) {
-    return "Recién";
-  }
-
-  if (minutos < MINUTOS_POR_HORA) {
-    return `Hace ${minutos} min`;
-  }
-
-  if (horas < HORAS_POR_DIA) {
-    return horas === 1 ? "Hace 1 hora" : `Hace ${horas} horas`;
-  }
-
-  if (dias === 1) {
-    return "Ayer";
-  }
-
-  return `Hace ${dias} días`;
-}
 
 async function buscarDestacadas(generos) {
   if (generos.length === 0) {
