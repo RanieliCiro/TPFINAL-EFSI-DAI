@@ -170,7 +170,7 @@ export default function EditProfileModal({ usuario, onCerrar, onGuardado }) {
           </div>
         </fieldset>
 
-        {error && <ErrorMessage mensaje={error} />}
+        {error && <ErrorMessage mensaje={error} sinReintentar />}
 
         <footer className="modal-acciones">
           <button type="button" className="modal-cancelar" onClick={onCerrar} disabled={guardando}>

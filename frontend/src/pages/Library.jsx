@@ -48,7 +48,7 @@ export default function Library() {
       setError("");
       const actualizada = await updateLibraryItem(id, cambios);
       setCanciones((actuales) =>
-        actuales.map((cancion) => (cancion.id === id ? actualizada : cancion))
+        actuales.map((cancion) => (cancion.id === id ? { ...actualizada, resena: cancion.resena } : cancion))
       );
     } catch (err) {
       setError(err.response?.data?.error || "No se pudo actualizar la canción");
@@ -58,6 +58,10 @@ export default function Library() {
   }
 
   async function quitarCancion(id) {
+    if (!window.confirm("¿Seguro que querés quitar esta canción de tu biblioteca? Se borra también su reseña.")) {
+      return;
+    }
+
     try {
       setActualizando(id);
       setError("");
@@ -118,7 +122,7 @@ export default function Library() {
       </section>
 
       {cargando && <Loader />}
-      {error && <ErrorMessage mensaje={error} />}
+      {error && <ErrorMessage mensaje={error} sinReintentar={canciones.length > 0} />}
 
       {!cargando && !error && cancionesFiltradas.length === 0 && (
         <EmptyState
@@ -150,7 +154,7 @@ export default function Library() {
                   type="button"
                   className={cancion.favorito ? "library-favorito activo" : "library-favorito"}
                   onClick={() => actualizarCancion(cancion.id, { favorito: !cancion.favorito })}
-                  deshabilitado={actualizando === cancion.id}
+                  disabled={actualizando === cancion.id}
                   aria-label={cancion.favorito ? "Quitar de favoritos" : "Agregar a favoritos"}
                 >
                   ♥
@@ -158,15 +162,26 @@ export default function Library() {
               </div>
 
               <div className="library-datos">
-                <h2 className="library-cancion-titulo">{cancion.titulo}</h2>
+                <h2 className="library-cancion-titulo">
+                  <Link to={`/song/${cancion.track_id}`} className="library-cancion-link">
+                    {cancion.titulo}
+                  </Link>
+                </h2>
                 <p className="library-cancion-artista">{cancion.artista}</p>
+                {cancion.resena ? (
+                  <p className="library-resena">“{cancion.resena}”</p>
+                ) : (
+                  <Link to={`/song/${cancion.track_id}`} className="library-resena-link">
+                    Escribir reseña
+                  </Link>
+                )}
               </div>
 
               <select
                 className="library-estado"
                 value={cancion.estado}
                 onChange={(event) => actualizarCancion(cancion.id, { estado: event.target.value })}
-                deshabilitado={actualizando === cancion.id}
+                disabled={actualizando === cancion.id}
                 aria-label={`Estado de ${cancion.titulo}`}
               >
                 <option value="quiero_escuchar">Quiero escuchar</option>

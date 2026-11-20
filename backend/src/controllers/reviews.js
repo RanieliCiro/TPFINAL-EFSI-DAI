@@ -116,15 +116,19 @@ export async function deleteReview(req, res) {
   }
 
   try {
-    const resultado = await pool.query("DELETE FROM resenas WHERE id = $1 AND usuario_id = $2", [
-      id,
-      req.usuario.id,
-    ]);
+    const resultado = await pool.query(
+      `DELETE FROM resenas r
+       USING biblioteca b
+       WHERE r.id = $1 AND r.usuario_id = $2 AND b.id = r.biblioteca_id
+       RETURNING b.titulo`,
+      [id, req.usuario.id]
+    );
 
-    if (resultado.rowCount === 0) {
+    if (resultado.rows.length === 0) {
       return res.status(404).json({ error: "No encontramos esa reseña" });
     }
 
+    await registrarActividad(req.usuario.id, "borrar_resena", resultado.rows[0].titulo);
     res.status(204).end();
   } catch (error) {
     res.status(500).json({ error: "Error al borrar la reseña" });

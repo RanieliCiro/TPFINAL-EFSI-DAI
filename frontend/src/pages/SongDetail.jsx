@@ -148,7 +148,7 @@ export default function SongDetail() {
         </div>
       </section>
 
-      {errorAccion && <ErrorMessage mensaje={errorAccion} />}
+      {errorAccion && <ErrorMessage mensaje={errorAccion} sinReintentar />}
 
       {guardada && (
         <>

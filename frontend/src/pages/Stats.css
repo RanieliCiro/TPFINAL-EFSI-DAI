@@ -154,6 +154,41 @@
   font-size: 0.78rem;
 }
 
+.stats-listas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 16px;
+}
+
+.stats-lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stats-lista-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.85rem;
+}
+
+.stats-lista-texto {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stats-lista-valor {
+  flex-shrink: 0;
+  color: var(--color-acento);
+}
+
 .stats-vacio {
   color: var(--color-texto-secundario);
   font-size: 0.85rem;

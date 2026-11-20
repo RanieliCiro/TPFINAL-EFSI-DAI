@@ -5,45 +5,36 @@ import { getActivity } from "../services/activity.js";
 import { getStats } from "../services/stats.js";
 import { getCollections } from "../services/collections.js";
 import { searchMusic } from "../services/music.js";
+import { useAuth } from "../context/AuthContext.jsx";
 import Loader from "../components/Loader.jsx";
 import ErrorMessage from "../components/ErrorMessage.jsx";
 import EmptyState from "../components/EmptyState.jsx";
 import SongCard from "../components/SongCard.jsx";
 import Disco, { COLORES_DISCO } from "../components/Disco.jsx";
 import { tiempoRelativo } from "../utils/tiempo.js";
+import { textoActividad } from "../utils/actividad.js";
+import { separarGeneros } from "../utils/generos.js";
 import "./Home.css";
 
 const CANCIONES_RECIENTES = 5;
 const CANCIONES_DESTACADAS = 5;
 const PLAYLISTS_VISIBLES = 3;
 const ACTIVIDAD_VISIBLE = 4;
-const TEXTOS_ACTIVIDAD = {
-  agregar_cancion: "Agregaste a tu biblioteca",
-  quitar_cancion: "Quitaste de tu biblioteca",
-  cambiar_estado: "Cambiaste el estado de",
-  favorito: "Marcaste como favorita",
-  puntuar: "Puntuaste",
-  crear_playlist: "Creaste la playlist",
-  borrar_playlist: "Borraste la playlist",
-  agregar_a_playlist: "Agregaste a una playlist",
-  quitar_de_playlist: "Quitaste de una playlist",
-  crear_resena: "Escribiste una reseña de",
-  editar_resena: "Editaste la reseña de",
-};
 
-async function buscarDestacadas(generos) {
-  if (generos.length === 0) {
+async function buscarDestacadas(genero) {
+  if (!genero) {
     return [];
   }
 
   try {
-    return await searchMusic(generos[0].genero);
+    return await searchMusic(genero);
   } catch (err) {
     return [];
   }
 }
 
 export default function Home() {
+  const { usuario } = useAuth();
   const [datos, setDatos] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
@@ -58,7 +49,9 @@ export default function Home() {
           getCollections(),
         ]);
 
-        const destacadas = await buscarDestacadas(stats.generos);
+        const destacadas = await buscarDestacadas(
+          separarGeneros(usuario.preferencias)[0] ?? stats.generos[0]?.genero
+        );
 
         setDatos({
           recientes: biblioteca.slice(0, CANCIONES_RECIENTES),
@@ -145,7 +138,7 @@ export default function Home() {
               </Link>
             </div>
             {datos.destacadas.length === 0 ? (
-              <EmptyState mensaje="Guardá canciones para recibir recomendaciones según tus géneros." />
+              <EmptyState mensaje="Elegí tus géneros en el perfil o guardá canciones para recibir recomendaciones." />
             ) : (
               <div className="home-canciones">
                 {datos.destacadas.map((cancion) => (
@@ -201,7 +194,7 @@ export default function Home() {
                   {datos.actividad.map((item) => (
                     <li key={item.id} className="home-actividad-item">
                       <span>
-                        {TEXTOS_ACTIVIDAD[item.tipo]} <strong>{item.referencia}</strong>
+                        {textoActividad(item.tipo)} <strong>{item.referencia}</strong>
                       </span>
                       <time className="home-texto-chico" dateTime={item.created_at}>
                         {tiempoRelativo(item.created_at)}

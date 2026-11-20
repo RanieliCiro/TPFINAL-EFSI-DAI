@@ -1,7 +1,7 @@
 import pool from "../db.js";
 import { registrarActividad } from "../utils/actividad.js";
 
-export const GENEROS_DISPONIBLES = ["Pop", "Indie", "Rock alternativo", "Electrónica", "Hip hop", "Jazz"];
+const GENEROS_DISPONIBLES = ["Pop", "Indie", "Rock alternativo", "Electrónica", "Hip hop", "Jazz"];
 
 const LIMITE_FAVORITOS = 8;
 const LIMITE_ACTIVIDAD = 5;
@@ -122,7 +122,7 @@ export async function updateProfile(req, res) {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    await registrarActividad(req.usuario.id, "editar_perfil", "Actualizaste tu perfil");
+    await registrarActividad(req.usuario.id, "editar_perfil", "");
     res.json(resultado.rows[0]);
   } catch (error) {
     res.status(500).json({ error: "Error al actualizar el perfil" });
