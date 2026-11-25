@@ -74,13 +74,14 @@ Cómo instalar las dependencias del backend:
 Cómo configurar la base de datos:
   1. Abrir pgAdmin y conectarse al servidor PostgreSQL 16.
   2. Clic derecho en Databases > Create > Database, con el nombre schema.
-  3. Revisar que la contraseña de PostgreSQL coincida con la de DATABASE_URL en backend/.env (por defecto, root).
-  4. Dentro de /backend, correr npm run seed. Crea las tablas y carga la cuenta demo, así que no hace falta correr SQL a mano.
+  3. Copiar backend/.env.example como backend/.env y frontend/.env.example como frontend/.env.
+  4. En backend/.env, completar DATABASE_URL con el usuario y la contraseña de PostgreSQL, poner un JWT_SECRET propio y elegir DEMO_EMAIL y DEMO_PASSWORD.
+  5. Dentro de /backend, correr npm run seed. Crea las tablas y carga la cuenta demo, así que no hace falta correr SQL a mano.
 
 Pasos adicionales para dejar el proyecto funcionando:
   1. Levantar el backend en una terminal: cd backend y npm run dev. Tiene que aparecer "Servidor escuchando en el puerto 3000".
   2. Levantar el frontend en otra terminal: cd frontend y npm run dev.
-  3. Abrir http://localhost:5173 y entrar con la cuenta demo (las credenciales están en DEMO_EMAIL y DEMO_PASSWORD de backend/.env).
+  3. Abrir http://localhost:5173 y entrar con la cuenta demo: el email y la contraseña son los de DEMO_EMAIL y DEMO_PASSWORD. Las credenciales de la cuenta demo de la entrega se pasan por el canal docente.
 
 - 5. Variables de entorno
 
@@ -104,7 +105,7 @@ Otras variables necesarias:
   - FRONTEND_URL: origen permitido por CORS (http://localhost:5173).
   - DEMO_EMAIL y DEMO_PASSWORD: datos de la cuenta demo que crea el seed.
 
-Aclaración sobre la configuración y protección de datos sensibles: los valores nunca se escriben en el código, siempre se leen de las variables de entorno con dotenv, y las contraseñas de los usuarios se guardan hasheadas. Como el proyecto solo se ejecuta en local, en una computadora del colegio, decidimos incluir los archivos .env en el repositorio para que funcione apenas se clona. Los .env.example muestran qué variables hacen falta. En un entorno real, los .env quedarían fuera del repositorio (están en .gitignore) y JWT_SECRET sería una clave distinta y privada.
+Aclaración sobre la configuración y protección de datos sensibles: los valores nunca se escriben en el código, siempre se leen de las variables de entorno con dotenv. Los archivos .env no se suben al repositorio (están en .gitignore); en el repo solo están los .env.example, con los nombres de las variables y valores de ejemplo. Cada uno arma su .env a partir del example. Las contraseñas de los usuarios se guardan hasheadas con bcryptjs, y las credenciales de la cuenta demo solo se comparten por el canal docente.
 
 - 6. Comandos para ejecutar el proyecto
 
@@ -151,7 +152,7 @@ Perfil:
 Método: GET
 Ruta: /api/profile
 Funcionalidad: devuelve los datos del usuario, sus favoritos y su actividad reciente. (Profile / services/profile.js)
-Método: PUT
+Método: PATCH
 Ruta: /api/profile
 Funcionalidad: edita username, bio, preferencias (géneros) y avatar (JPG o PNG de hasta 2 MB). 400 si un dato no es válido; 409 si el nombre ya está en uso. (EditProfileModal en Profile / services/profile.js)
 
@@ -207,9 +208,6 @@ Puntuaciones y reseñas:
 Método: PATCH
 Ruta: /api/library/:id
 Funcionalidad: con { "puntuacion": 1 a 5 } puntúa la canción, y con null borra la puntuación. (Library y SongDetail / services/library.js)
-Método: GET
-Ruta: /api/reviews
-Funcionalidad: lista las reseñas del usuario con los datos de cada canción. Está disponible en services/reviews.js, pero hoy ninguna pantalla lo usa.
 Método: POST
 Ruta: /api/reviews
 Funcionalidad: crea una reseña con { "biblioteca_id": n, "texto": "..." }. La canción tiene que ser del usuario; 409 si ya tiene reseña. (SongDetail / services/reviews.js)
@@ -240,7 +238,7 @@ Descripción de cada tabla:
   - colecciones: playlists de cada usuario, con nombre, descripcion y created_at.
   - coleccion_canciones: une cada playlist con las canciones de la biblioteca que tiene.
   - resenas: una reseña por canción guardada, con texto (no puede estar vacío), created_at y updated_at.
-  - actividad: registro de lo que hace cada usuario, con tipo (agregar_cancion, quitar_cancion, cambiar_estado, favorito, puntuar, crear_playlist, editar_playlist, borrar_playlist, agregar_a_playlist, quitar_de_playlist, crear_resena, editar_resena, borrar_resena o editar_perfil), referencia (texto legible: título de la canción o nombre de la playlist) y created_at.
+  - actividad: registro de lo que hace cada usuario, con tipo (agregar_cancion, quitar_cancion, cambiar_estado, favorito, puntuar, crear_playlist, editar_playlist, borrar_playlist, agregar_a_playlist, quitar_de_playlist, crear_resena, editar_resena, borrar_resena o editar_perfil), referencia (texto legible: título de la canción, nombre de la playlist o, en editar_perfil, el username) y created_at.
 
 Relaciones entre las tablas:
   - Un usuario tiene muchas canciones en biblioteca, muchas playlists, muchas reseñas y muchas filas de actividad.
