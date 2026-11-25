@@ -7,6 +7,6 @@ const router = Router();
 router.use(verificarToken);
 
 router.get("/", getProfile);
-router.put("/", updateProfile);
+router.patch("/", updateProfile);
 
 export default router;

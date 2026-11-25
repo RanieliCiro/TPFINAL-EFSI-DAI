@@ -122,7 +122,7 @@ export async function updateProfile(req, res) {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    await registrarActividad(req.usuario.id, "editar_perfil", "");
+    await registrarActividad(req.usuario.id, "editar_perfil", usernameLimpio);
     res.json(resultado.rows[0]);
   } catch (error) {
     res.status(500).json({ error: "Error al actualizar el perfil" });

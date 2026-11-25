@@ -16,24 +16,6 @@ function validarTexto(texto) {
   return null;
 }
 
-export async function getReviews(req, res) {
-  try {
-    const resultado = await pool.query(
-      `SELECT r.id, r.biblioteca_id, r.texto, r.created_at, r.updated_at,
-              b.track_id, b.titulo, b.artista, b.portada_url
-       FROM resenas r
-       JOIN biblioteca b ON b.id = r.biblioteca_id
-       WHERE r.usuario_id = $1
-       ORDER BY r.updated_at DESC`,
-      [req.usuario.id]
-    );
-
-    res.json(resultado.rows);
-  } catch (error) {
-    res.status(500).json({ error: "Error al obtener las reseñas" });
-  }
-}
-
 export async function createReview(req, res) {
   const bibliotecaId = parsearId(req.body?.biblioteca_id);
   const error = validarTexto(req.body?.texto);

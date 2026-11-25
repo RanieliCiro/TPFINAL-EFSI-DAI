@@ -74,6 +74,17 @@ export default function Library() {
     }
   }
 
+  const cantidadPorFiltro = canciones.reduce(
+    (conteo, cancion) => {
+      conteo[cancion.estado] += 1;
+      if (cancion.favorito) {
+        conteo.favoritos += 1;
+      }
+      return conteo;
+    },
+    { todas: canciones.length, quiero_escuchar: 0, escuchando: 0, escuchado: 0, favoritos: 0 }
+  );
+
   const textoBuscado = busqueda.trim().toLowerCase();
   const cancionesFiltradas = canciones.filter((cancion) => {
     const coincideFiltro =
@@ -108,7 +119,7 @@ export default function Library() {
               className={filtro === item.valor ? "library-filtro activo" : "library-filtro"}
               onClick={() => setFiltro(item.valor)}
             >
-              {item.texto}
+              {item.texto} ({cantidadPorFiltro[item.valor]})
             </button>
           ))}
         </nav>
