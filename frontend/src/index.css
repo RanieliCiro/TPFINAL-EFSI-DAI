@@ -1,0 +1,238 @@
+:root {
+  --color-fondo: #1c1410;
+  --color-superficie: #2a1e18;
+  --color-input: #3a2b23;
+  --color-tarjeta: #36271f;
+  --color-tarjeta-destacada: #4a3428;
+  --color-borde: #4a382e;
+  --color-acento: #cf7f3a;
+  --color-acento-hover: #e0904a;
+  --color-texto: #f5ede4;
+  --color-texto-secundario: #b8a698;
+  --color-error: #ef6b5b;
+  --color-disco-marron: #5c3d2e;
+  --color-disco-naranja: #d08844;
+  --color-disco-verde: #3e5a4b;
+  --color-disco-violeta: #6b4f72;
+  --color-disco-terracota: #8a4b32;
+  --color-disco-azul: #2f4a52;
+  --color-disco-crema: #ecdcc0;
+  --color-disco-arena: #e9b37a;
+  --color-disco-lila: #c79bc4;
+  --color-disco-celeste: #9fb5b8;
+  --fuente: "Inter", system-ui, sans-serif;
+  --radio: 6px;
+  --alto-barra-inferior: 64px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fuente);
+  line-height: 1.5;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--color-acento);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  font: inherit;
+  padding: 10px 12px;
+  background: var(--color-input);
+  color: var(--color-texto);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+}
+
+textarea {
+  resize: vertical;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-texto-secundario);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-acento);
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.app-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  background: var(--color-superficie);
+}
+
+.pagina {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  min-width: 0;
+}
+
+.pagina-titulo {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.pagina-subtitulo {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.texto-secundario {
+  color: var(--color-texto-secundario);
+  font-size: 0.9rem;
+}
+
+.texto-chico {
+  color: var(--color-texto-secundario);
+  font-size: 0.75rem;
+}
+
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  border-radius: var(--radio);
+  background: var(--color-tarjeta);
+}
+
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 10px 20px;
+  border: 1px solid var(--color-acento);
+  border-radius: var(--radio);
+  background: var(--color-acento);
+  color: var(--color-fondo);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.boton:hover:not(:disabled) {
+  background: var(--color-acento-hover);
+  text-decoration: none;
+}
+
+.boton-secundario {
+  background: transparent;
+  color: var(--color-texto);
+  border-color: var(--color-borde);
+}
+
+.boton-secundario:hover:not(:disabled) {
+  background: var(--color-tarjeta-destacada);
+}
+
+.boton-peligro {
+  background: transparent;
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.boton-peligro:hover:not(:disabled) {
+  background: var(--color-error);
+  color: var(--color-fondo);
+}
+
+.boton-chico {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+}
+
+.grilla-canciones {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.formulario label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.formulario-botones {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1024px) {
+  .grilla-canciones {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .app-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    padding-bottom: var(--alto-barra-inferior);
+  }
+
+  .pagina {
+    padding: 24px 16px;
+    gap: 24px;
+  }
+
+  .pagina-titulo {
+    font-size: 1.4rem;
+  }
+
+  .grilla-canciones {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

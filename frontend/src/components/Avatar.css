@@ -1,0 +1,34 @@
+.avatar {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--color-acento);
+  color: var(--color-fondo);
+  line-height: 1;
+}
+
+.avatar-grande {
+  width: 104px;
+  height: 104px;
+  font-size: 2.6rem;
+}
+
+.avatar-chico {
+  width: 64px;
+  height: 64px;
+  font-size: 1.6rem;
+}
+
+.avatar-mini {
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+}
+
+.avatar-imagen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
