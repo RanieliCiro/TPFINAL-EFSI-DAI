@@ -292,7 +292,9 @@ Configuración de producción: no aplica. Para compilar el frontend existe npm r
 
 Enlace al repositorio de GitHub: https://github.com/RanieliCiro/TPFINAL-EFSI-DAI
 
-Enlace al tablero de Trello: [COMPLETAR]
+Enlace al tablero de Trello: https://trello.com/b/u23AuEEj/tp-final-dai-efsi
+
+Enlace al diseño en Figma: https://www.figma.com/design/6WgOu1owP1YJBcbjh2kndL/SoundShelf?node-id=0-1&p=f&t=EGBYt7dYLhYr6J0u-0
 
 Organización de las ramas:
   - main: versión final.
