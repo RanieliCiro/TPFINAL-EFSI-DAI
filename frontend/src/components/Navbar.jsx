@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import Logo from "./Logo.jsx";
+import Avatar from "./Avatar.jsx";
 import "./Navbar.css";
 
 function Icono({ children }) {
@@ -37,7 +38,7 @@ const LINKS = [
   },
   {
     ruta: "/library",
-    texto: "Mi biblioteca",
+    texto: "Biblioteca",
     icono: <path d="M4 6h16M4 12h16M4 18h16" />,
   },
   {
@@ -58,7 +59,7 @@ const LINKS = [
   },
   {
     ruta: "/profile",
-    texto: "Mi perfil",
+    texto: "Perfil",
     icono: (
       <>
         <circle cx="12" cy="8" r="4" />
@@ -69,12 +70,15 @@ const LINKS = [
 ];
 
 export default function Navbar() {
-  const { logout } = useAuth();
+  const { usuario, logout } = useAuth();
 
   return (
     <aside className="navbar">
-      <div className="navbar-logo">
+      <div className="navbar-superior">
         <Logo />
+        <NavLink to="/profile" className="navbar-avatar" aria-label="Ir a mi perfil">
+          <Avatar src={usuario.avatar} nombre={usuario.username} tamanio="mini" />
+        </NavLink>
       </div>
 
       <nav className="navbar-links">
@@ -86,7 +90,7 @@ export default function Navbar() {
             className={({ isActive }) => (isActive ? "navbar-link navbar-link-activo" : "navbar-link")}
           >
             <Icono>{link.icono}</Icono>
-            {link.texto}
+            <span>{link.texto}</span>
           </NavLink>
         ))}
       </nav>

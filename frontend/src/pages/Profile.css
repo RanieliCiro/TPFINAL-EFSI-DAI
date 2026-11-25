@@ -168,6 +168,10 @@
   font-size: 0.75rem;
 }
 
+.profile-salir {
+  display: none;
+}
+
 @media (max-width: 1024px) {
   .profile-favoritos {
     grid-template-columns: repeat(3, 1fr);
@@ -212,5 +216,9 @@
   .profile-actividad-item::before {
     top: 19px;
     margin-top: 0;
+  }
+
+  .profile-salir {
+    display: inline-flex;
   }
 }

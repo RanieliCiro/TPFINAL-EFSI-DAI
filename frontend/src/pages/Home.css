@@ -21,6 +21,10 @@
   font-weight: 700;
 }
 
+.home-titulo-mobile {
+  display: none;
+}
+
 .home-texto-secundario {
   color: var(--color-texto-secundario);
   font-size: 0.9rem;
@@ -208,6 +212,14 @@
 
   .home-titulo {
     font-size: 1.4rem;
+  }
+
+  .home-titulo-escritorio {
+    display: none;
+  }
+
+  .home-titulo-mobile {
+    display: inline;
   }
 
   .home-portada {

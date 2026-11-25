@@ -73,7 +73,10 @@ export default function Home() {
     <main className="home">
       <header className="home-encabezado">
         <div>
-          <h1 className="home-titulo">Bienvenido a SoundShelf</h1>
+          <h1 className="home-titulo">
+            <span className="home-titulo-escritorio">Bienvenido a SoundShelf</span>
+            <span className="home-titulo-mobile">Hola, {usuario.username}</span>
+          </h1>
           <p className="home-texto-secundario">Tu música, organizada a tu manera.</p>
         </div>
         <Link to="/explore" className="home-boton">
