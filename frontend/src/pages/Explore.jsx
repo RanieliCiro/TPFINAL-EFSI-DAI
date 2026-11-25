@@ -127,14 +127,6 @@ export default function Explore() {
             <h2 className="pagina-subtitulo">Resultados para "{termino}"</h2>
             {resultados.length > 0 && (
               <div className="explore-filtros">
-                <select value={genero} onChange={(event) => setGenero(event.target.value)} aria-label="Filtrar por género">
-                  <option value="">Todos los géneros</option>
-                  {generos.map((opcion) => (
-                    <option key={opcion} value={opcion}>
-                      {opcion}
-                    </option>
-                  ))}
-                </select>
                 <select value={orden} onChange={(event) => setOrden(event.target.value)} aria-label="Ordenar">
                   {ORDENES.map((opcion) => (
                     <option key={opcion.valor} value={opcion.valor}>
@@ -145,6 +137,30 @@ export default function Explore() {
               </div>
             )}
           </div>
+
+          {resultados.length > 0 && (
+            <div className="explore-chips" aria-label="Filtrar por género">
+              <button
+                type="button"
+                className={genero === "" ? "explore-chip activo" : "explore-chip"}
+                onClick={() => setGenero("")}
+                aria-pressed={genero === ""}
+              >
+                Todos
+              </button>
+              {generos.map((opcion) => (
+                <button
+                  key={opcion}
+                  type="button"
+                  className={genero === opcion ? "explore-chip activo" : "explore-chip"}
+                  onClick={() => setGenero(opcion)}
+                  aria-pressed={genero === opcion}
+                >
+                  {opcion}
+                </button>
+              ))}
+            </div>
+          )}
 
           {resultados.length === 0 && (
             <EmptyState mensaje="No encontramos canciones con esa búsqueda. Probá con otras palabras." />

@@ -22,6 +22,7 @@
   --color-disco-celeste: #9fb5b8;
   --fuente: "Inter", system-ui, sans-serif;
   --radio: 6px;
+  --alto-barra-inferior: 64px;
 }
 
 *,
@@ -218,6 +219,8 @@ button:disabled {
 @media (max-width: 767px) {
   .app-layout {
     grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    padding-bottom: var(--alto-barra-inferior);
   }
 
   .pagina {

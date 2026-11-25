@@ -14,7 +14,7 @@ import { textoActividad } from "../utils/actividad.js";
 import "./Profile.css";
 
 export default function Profile() {
-  const { actualizarUsuario } = useAuth();
+  const { actualizarUsuario, logout } = useAuth();
   const [datos, setDatos] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
@@ -117,6 +117,10 @@ export default function Profile() {
               </ul>
             )}
           </section>
+
+          <button type="button" className="boton boton-peligro profile-salir" onClick={logout}>
+            Cerrar sesión
+          </button>
         </>
       )}
 

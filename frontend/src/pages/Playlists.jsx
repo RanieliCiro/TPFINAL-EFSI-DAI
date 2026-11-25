@@ -5,6 +5,7 @@ import Loader from "../components/Loader.jsx";
 import ErrorMessage from "../components/ErrorMessage.jsx";
 import EmptyState from "../components/EmptyState.jsx";
 import Disco, { COLORES_DISCO } from "../components/Disco.jsx";
+import "../components/EditProfileModal.css";
 import "./Playlists.css";
 
 export default function Playlists() {
@@ -60,47 +61,10 @@ export default function Playlists() {
           <h1 className="pagina-titulo">Mis playlists</h1>
           <p className="texto-secundario">Agrupá tus canciones guardadas como quieras.</p>
         </div>
-        {!mostrarFormulario && (
-          <button className="boton" onClick={() => setMostrarFormulario(true)}>
-            + Nueva playlist
-          </button>
-        )}
+        <button className="boton" onClick={() => setMostrarFormulario(true)}>
+          + Nueva playlist
+        </button>
       </header>
-
-      {mostrarFormulario && (
-        <form className="tarjeta formulario" onSubmit={handleCrear}>
-          <h2 className="pagina-subtitulo">Nueva playlist</h2>
-          <label>
-            Nombre
-            <input
-              value={nombre}
-              onChange={(event) => setNombre(event.target.value)}
-              placeholder="Ej: Para estudiar"
-              maxLength="100"
-              autoFocus
-            />
-          </label>
-          <label>
-            Descripción (opcional)
-            <textarea
-              rows="2"
-              value={descripcion}
-              onChange={(event) => setDescripcion(event.target.value)}
-              placeholder="¿De qué se trata esta playlist?"
-              maxLength="300"
-            />
-          </label>
-          {errorFormulario && <ErrorMessage mensaje={errorFormulario} sinReintentar />}
-          <div className="formulario-botones">
-            <button className="boton" type="submit" disabled={creando || !nombre.trim()}>
-              {creando ? "Creando..." : "Crear playlist"}
-            </button>
-            <button className="boton boton-secundario" type="button" onClick={cerrarFormulario}>
-              Cancelar
-            </button>
-          </div>
-        </form>
-      )}
 
       {cargando && <Loader />}
 
@@ -127,6 +91,54 @@ export default function Playlists() {
             </li>
           ))}
         </ul>
+      )}
+
+      {mostrarFormulario && (
+        <div className="modal-fondo" onMouseDown={(event) => event.target === event.currentTarget && !creando && cerrarFormulario()}>
+          <form className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" onSubmit={handleCrear}>
+            <header className="modal-encabezado">
+              <h2 id="modal-titulo" className="modal-titulo">
+                Nueva playlist
+              </h2>
+              <button type="button" className="modal-cerrar" onClick={cerrarFormulario} disabled={creando} aria-label="Cerrar">
+                ×
+              </button>
+            </header>
+
+            <label className="modal-campo">
+              <span className="modal-etiqueta">Nombre</span>
+              <input
+                value={nombre}
+                onChange={(event) => setNombre(event.target.value)}
+                placeholder="Ej: Para estudiar"
+                maxLength="100"
+                autoFocus
+              />
+            </label>
+
+            <label className="modal-campo">
+              <span className="modal-etiqueta">Descripción (opcional)</span>
+              <textarea
+                rows="2"
+                value={descripcion}
+                onChange={(event) => setDescripcion(event.target.value)}
+                placeholder="¿De qué se trata esta playlist?"
+                maxLength="300"
+              />
+            </label>
+
+            {errorFormulario && <ErrorMessage mensaje={errorFormulario} sinReintentar />}
+
+            <footer className="modal-acciones">
+              <button type="button" className="modal-cancelar" onClick={cerrarFormulario} disabled={creando}>
+                Cancelar
+              </button>
+              <button type="submit" className="modal-guardar" disabled={creando || !nombre.trim()}>
+                {creando ? "Creando..." : "Crear playlist"}
+              </button>
+            </footer>
+          </form>
+        </div>
       )}
     </main>
   );

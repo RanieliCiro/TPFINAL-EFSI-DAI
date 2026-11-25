@@ -136,6 +136,12 @@ export default function Library() {
         </EmptyState>
       )}
 
+      {!cargando && canciones.length > 0 && (
+        <p className="texto-secundario">
+          Mi colección · {canciones.length === 1 ? "1 canción" : `${canciones.length} canciones`}
+        </p>
+      )}
+
       {!cargando && cancionesFiltradas.length > 0 && (
         <section className="library-grid">
           {cancionesFiltradas.map((cancion, indice) => (
