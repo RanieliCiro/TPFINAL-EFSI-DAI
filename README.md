@@ -15,7 +15,7 @@ Al principio cada uno tomó una parte; después fuimos mezclando y corrigiendo c
 Integrante 1: Ciro Ranieli (rama Ranieli)
 Responsabilidades: base de datos (schema.sql) y estructura inicial del proyecto; maquetado de login y registro según el Figma; Home (canciones recientes, actividad, contadores, playlists y destacados de iTunes) con su barra lateral, logo y discos; endpoint de estadísticas en el backend; depuración general antes de la entrega.
 
-Integrante 2: Ignacio "Nacho" Eskenazi (rama Eskenazi)
+Integrante 2: Ignacio Eskenazi (rama Eskenazi)
 Responsabilidades: autenticación completa en back y front (registro, login, /auth/me, JWT, middleware de auth, contraseñas con bcrypt), configuración de Axios con interceptores, AuthContext y ProtectedRoute; pantalla 404; integración de PRs a dev.
 
 Integrante 3: Fede Ajami (rama Ajami)
